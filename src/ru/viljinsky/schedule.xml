@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    
+    <day_list>
+        <day id="1" caption="Пн"></day>
+        <day id="2" caption="Вт"></day>
+        <day id="3" caption="Ср"></day>
+        <day id="4" caption="Чт"></day>
+        <day id="5" caption="Пт"></day>
+        <day id="6" caption="Сб"></day>
+        <day id="7" caption="Вс"></day>
+    </day_list>
+    
+    <lesson_list>
+        <lesson id="1" time_begin="9:00" time_end="9:45"></lesson>
+        <lesson id="2" time_begin="10:00" time_end="10:45"></lesson>
+        <lesson id="3" time_begin="11:00" time_end="11:45"></lesson>
+        <lesson id="4" time_begin="12:00" time_end="12:45"></lesson>
+        <lesson id="5" time_begin="13:00" time_end="13:45"></lesson>
+        <lesson id="6" time_begin="14:00" time_end="14:45"></lesson>
+        <lesson id="7" time_begin="15:00" time_end="15:45"></lesson>
+    </lesson_list>
+    
+    <shift_list>
+        <shift id="1" caption="По умолчанию">
+            <lesson lesson_id="1"></lesson>
+            <lesson lesson_id="2"></lesson>
+            <lesson lesson_id="3"></lesson>
+            <lesson lesson_id="4"></lesson>
+        </shift>
+    </shift_list>
+    
+    <subject_list>
+        <subject id="1" name="Русский яз"></subject>
+        <subject id="2" name="Математика"></subject>
+        <subject id="3" name="Физика"></subject>
+        <subject id="4" name="Химия"></subject>
+        <subject id="5" name="Литература"></subject>        
+    </subject_list>
+    
+    
+    
+    <teacher_list>
+        <teacher id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна"></teacher>
+        <teacher id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна"></teacher>
+        <teacher id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна"></teacher>
+        <teacher id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна"></teacher>        
+    </teacher_list>
+    
+    <room_list>
+        <room id="1" number="312" description=""></room>
+        <room id="2" number="314" description=""></room>
+        <room id="3" number="510" description=""></room>
+        <room id="4" number="515" description=""></room>
+    </room_list>
+    
+    <skill>
+        <level id="1" caption="8-класс"></level>
+        <level id="2" caption="9-класс"></level>
+        <level id="3" caption="10-класс"></level>
+        <level id="4" caption="11-класс"></level>
+    </skill>
+    
+    <depart_list>
+        <depart id="1" skill_id="8" label="А" ></depart>
+        <depart id="1" skill_id="8" label="Б" ></depart>
+        <depart id="1" skill_id="8" label="В" ></depart>
+        <depart id="1"skill_id="9" label="А" ></depart>
+        <depart id="1" skill_id="9" label="Б" ></depart>
+        <depart id="1" skill_id="10" label="А" ></depart>
+        <depart id="1" skill_id="10" label="Б" ></depart>
+    </depart_list>
+    
+</root>
