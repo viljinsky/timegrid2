@@ -20,7 +20,7 @@ public class CellElement {
     boolean selected = false;
     Rectangle bound;
     public static Integer WIDTH = 60;
-    public static Integer HEIGHT = 40;
+    public static Integer HEIGHT = 80;
     Color color = new Color(255, 255, 200);
 
     public void draw(Graphics g, Rectangle b) {

@@ -34,7 +34,7 @@
         
 
     
-    <table name="subject">
+    <table name="subject" primary="id">
         <rec id="1" name="Русский яз" color="#ffeeee"></rec>
         <rec id="2" name="Математика" color="#eeffee"></rec>
         <rec id="3" name="Физика" color="#ffeeff"></rec>
@@ -73,11 +73,22 @@
         <rec id="5" skill_id="9" label="Б" ></rec>
         <rec id="6" skill_id="10" label="А" ></rec>
         <rec id="7" skill_id="10" label="Б" ></rec>
+        <primary key="id"></primary>
+        <foreigh key="skill_id" references="skill"></foreigh>
+    </table>
+    
+    <table name="group_type">
+        <rec id="1" caption="М" description=""></rec>
+        <rec id="2" caption="Д" description=""></rec>
+        <rec id="3" caption="1" description=""></rec>
+        <rec id="4" caption="2" description=""></rec>
+        <rec id="5" caption="3" description=""></rec>
+        <rec id="6" caption="4" description=""></rec>
     </table>
     
     <table name="subject_group">
-        <rec depart_id="1" subject_id="1"></rec>
-        <rec depart_id="2" subject_id="2"></rec>
+        <rec depart_id="1" subject_id="1" group_type_id="1"></rec>
+        <rec depart_id="2" subject_id="2" group_type_id="1"></rec>
         <rec depart_id="3" subject_id="3"></rec>
         <rec depart_id="4" subject_id="4"></rec>
     </table>>

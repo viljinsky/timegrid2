@@ -486,50 +486,50 @@ public class TimeGrid extends AbstractTimeGrid{
         cells.add(element);
     }
     
-    class Chip extends CellElement{
-        int subject_id;
-        int teacher_id;
-        int room_id;
-        int group_id;
-        DataModule dm = DataModule.getInsatnce();
-        
-        public Chip(int subject_id,int teacher_id,int room_id,int group_id){
-            this.subject_id=subject_id;
-            this.teacher_id=teacher_id;
-            this.room_id=room_id;
-            this.group_id=group_id;
-        }
-
-        @Override
-        public void draw(Graphics g,Rectangle b) {
-            super.draw(g,b);
-            String subject_name = dm.getSubjectName(subject_id);
-            String teacher_name = dm.getTeacherName(teacher_id);
-            String room_no = dm.getRoomNo(room_id);
-            String group_title = dm.getGroupTitle(group_id);
-            
-
-            Image image = new BufferedImage(b.width-1, b.height-1, BufferedImage.TYPE_INT_RGB);
-            Graphics g1 = image.getGraphics();
-            g1.setColor(dm.getSubjectColor(subject_id));
-            g1.fillRect(0, 0, b.width, b.height);
-            
-            int h = g1.getFontMetrics().getHeight();
-            g1.setColor(Color.black);
-            g1.drawString(subject_name, 0,1*h);
-            
-            g1.drawString(teacher_name,0,2*h);
-            
-            g1.drawString(room_no,0,3*h);
-            
-            g1.drawString(group_title,0,4*h);
-            
-            g.drawImage(image, b.x+1, b.y+1, null);
-            
-            
-        }
-        
-    }
+//    class Chip extends CellElement{
+//        int subject_id;
+//        int teacher_id;
+//        int room_id;
+//        int group_id;
+//        DataModule dm = DataModule.getInsatnce();
+//        
+//        public Chip(int subject_id,int teacher_id,int room_id,int group_id){
+//            this.subject_id=subject_id;
+//            this.teacher_id=teacher_id;
+//            this.room_id=room_id;
+//            this.group_id=group_id;
+//        }
+//
+//        @Override
+//        public void draw(Graphics g,Rectangle b) {
+//            super.draw(g,b);
+//            String subject_name = dm.getSubjectName(subject_id);
+//            String teacher_name = dm.getTeacherName(teacher_id);
+//            String room_no = dm.getRoomNo(room_id);
+//            String group_title = dm.getGroupTitle(group_id);
+//            
+//
+//            Image image = new BufferedImage(b.width-1, b.height-1, BufferedImage.TYPE_INT_RGB);
+//            Graphics g1 = image.getGraphics();
+//            g1.setColor(dm.getSubjectColor(subject_id));
+//            g1.fillRect(0, 0, b.width, b.height);
+//            
+//            int h = g1.getFontMetrics().getHeight();
+//            g1.setColor(Color.black);
+//            g1.drawString(subject_name, 0,1*h);
+//            
+//            g1.drawString(teacher_name,0,2*h);
+//            
+//            g1.drawString(room_no,0,3*h);
+//            
+//            g1.drawString(group_title,0,4*h);
+//            
+//            g.drawImage(image, b.x+1, b.y+1, null);
+//            
+//            
+//        }
+//        
+//    }
     
     public void load(){
         Chip chip ;
@@ -541,6 +541,22 @@ public class TimeGrid extends AbstractTimeGrid{
 //                 chip.col=i;chip.row=j;
 //                 cells.add(chip);
 //            }
+//        }
+        
+        
+//        DataModule dm = DataModule.getInsatnce();
+//        if (!dm.isActive()){
+//            dm.open();
+//        }
+//        
+//        Dataset ds = dm.getTable("work_plan");
+//        ds.first();
+//        while (!ds.eof()){
+//            chip = new Chip(ds.getInteger("subject_id"),ds.getInteger("teacher_id"),
+//                    ds.getInteger("room_id"),ds.getInteger("group_id"));
+//            chip.setCell(ds.getInteger("day_id"), ds.getInteger("lesson_id"));
+//            cells.add(chip);
+//            ds.next();
 //        }
         
         

@@ -13,14 +13,47 @@ import javax.swing.JMenuBar;
  *
  * @author вадик
  */
+class TTimeGrid extends TimeGrid{
+    DataModule dm = DataModule.getInsatnce();
+
+    @Override
+    public void load() {
+        cells.clear();
+        Chip chip;
+        Dataset ds = dm.getTable("work_plan");
+        ds.first();
+        while (!ds.eof()){
+            chip = new ru.viljinsky.Chip(ds.getInteger("subject_id"),ds.getInteger("teacher_id"),
+                    ds.getInteger("room_id"),ds.getInteger("group_id"));
+            chip.setCell(ds.getInteger("day_id"), ds.getInteger("lesson_id"));
+            cells.add(chip);
+            ds.next();
+        }
+    }
+
+}
+
 public class Main {
+    
+    
     public static void main(String[] args){
         DataModule dataModule = DataModule.getInsatnce();
         dataModule.open();
         
+        Dataset ds = dataModule.getTable("work_plan");
+        ds.first();
+        while (!ds.eof()){
+            for (String columnName:ds.getColumns()){
+                System.out.print(columnName +" = '"+ ds.getValue(columnName)+"'");
+            }
+            ds.next();
+            System.out.println();
+        }
         
         
-        TimeGrid timeGrid = new TimeGrid();
+        
+        
+        TTimeGrid timeGrid = new TTimeGrid();
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(timeGrid.getMenu());
         

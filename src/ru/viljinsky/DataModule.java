@@ -7,19 +7,19 @@
 package ru.viljinsky;
 
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.net.URL;
+import java.util.List;
 
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
 
 /**
  *
  * @author вадик
  */
 public class DataModule {
+    
+    boolean active = false;
+    List<Dataset> tables = null;
+    
     String[] subjects = {"Русский","Математика","Физика","Литература","Биология"};
     Color[] subjectColor={Color.CYAN,Color.MAGENTA,Color.PINK,Color.ORANGE,Color.WHITE};
     
@@ -35,6 +35,9 @@ public class DataModule {
     protected DataModule(){
     }
     
+    public boolean isActive(){
+        return active;
+    }
     public static DataModule getInsatnce(){
         if (instance==null){
             instance = new DataModule();
@@ -62,6 +65,14 @@ public class DataModule {
         return group[group_id];
     }
     
+    public Dataset getTable(String tableName){
+        for (Dataset dataset:tables){
+            if (dataset.getTableName().equals(tableName)){
+                return dataset;
+            }
+        }
+        return null;
+    }
     
     public void open(){
         URL url = DataModule.class.getResource("schedule.xml");
@@ -69,6 +80,8 @@ public class DataModule {
             try{
                 Parser parser = new Parser();
                 parser.open(url.getPath());
+                tables = parser.tables;
+                active = true;
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -77,34 +90,20 @@ public class DataModule {
     }
 
     
+    public Object lookUp(String tableName,String keyName,Object keyValue,String searchColumn) throws Exception{
+        Dataset dataset = getTable(tableName);
+        if (dataset!=null){
+            return dataset.lookUp(keyName, keyValue, searchColumn);
+        } else {
+            new Exception("Dataset '"+tableName+"'not found");
+        }
+        return null;
+    }
+    
     public static void main(String[] args){
         
         DataModule dataModule = DataModule.getInsatnce();
         dataModule.open();
-        
-//        URL url = DataModule.class.getResource("schedule.xml");
-//        if (url!=null){
-//            try{
-//                Parser parser = new Parser();
-//                parser.open(url.getPath());
-//            } catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-//            String path =url.getPath();
-//            try{
-//
-//                Parser rdr = new Parser();
-//                rdr.execute(path);
-//
-//        
-//            } catch (Exception e){
-//                System.err.println(e.getMessage());
-//                e.printStackTrace();
-//                        
-//            }
-//        
-//        }
         
     }
     

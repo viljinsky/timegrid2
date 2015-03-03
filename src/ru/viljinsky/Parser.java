@@ -26,6 +26,10 @@ class Dataset extends ArrayList<Object[]>{
     Map<Integer,String> columns;
     
     protected Integer index;
+
+    public String getTableName(){
+        return name;
+    }
     
     public void first(){
         index = 0;
@@ -59,6 +63,31 @@ class Dataset extends ArrayList<Object[]>{
         Object[] rowset = get(index);
         int n= getColumnIndex(columnName);
         return rowset[n];
+    }
+    
+    public Integer getInteger(String columnName){
+        Object value = getValue(columnName);
+        if (value!=null){
+            return Integer.parseInt((String)value);
+        }
+        return null;
+    }
+    
+    public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
+        int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
+        if (n<0)
+            new Exception("column '"+columnName+"' not found");
+        if (k<0)
+            new Exception("column '"+searchName+"' not found");
+        
+        Integer value;
+        for (Object[] recordset:this){
+            value = Integer.parseInt((String)recordset[n]);
+            if (value.equals(columnValue)){
+                return recordset[k];
+            }
+        }
+        return null;
     }
 
     public Dataset(String name){
