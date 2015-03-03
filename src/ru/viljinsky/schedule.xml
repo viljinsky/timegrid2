@@ -1,74 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     
-    <day_list>
-        <day id="1" caption="Пн"></day>
-        <day id="2" caption="Вт"></day>
-        <day id="3" caption="Ср"></day>
-        <day id="4" caption="Чт"></day>
-        <day id="5" caption="Пт"></day>
-        <day id="6" caption="Сб"></day>
-        <day id="7" caption="Вс"></day>
-    </day_list>
+    <table name="day_list">
+        <rec id="1" caption="Пн"></rec>
+        <rec id="2" caption="Вт"></rec>
+        <rec id="3" caption="Ср"></rec>
+        <rec id="4" caption="Чт"></rec>
+        <rec id="5" caption="Пт"></rec>
+        <rec id="6" caption="Сб"></rec>
+        <rec id="7" caption="Вс"></rec>
+    </table>
     
-    <lesson_list>
-        <lesson id="1" time_begin="9:00" time_end="9:45"></lesson>
-        <lesson id="2" time_begin="10:00" time_end="10:45"></lesson>
-        <lesson id="3" time_begin="11:00" time_end="11:45"></lesson>
-        <lesson id="4" time_begin="12:00" time_end="12:45"></lesson>
-        <lesson id="5" time_begin="13:00" time_end="13:45"></lesson>
-        <lesson id="6" time_begin="14:00" time_end="14:45"></lesson>
-        <lesson id="7" time_begin="15:00" time_end="15:45"></lesson>
-    </lesson_list>
+    <table name="lesson">
+        <rec id="1" time_begin="9:00" time_end="9:45"></rec>
+        <rec id="2" time_begin="10:00" time_end="10:45"></rec>
+        <rec id="3" time_begin="11:00" time_end="11:45"></rec>
+        <rec id="4" time_begin="12:00" time_end="12:45"></rec>
+        <rec id="5" time_begin="13:00" time_end="13:45"></rec>
+        <rec id="6" time_begin="14:00" time_end="14:45"></rec>
+        <rec id="7" time_begin="15:00" time_end="15:45"></rec>
+    </table>
     
-    <shift_list>
-        <shift id="1" caption="По умолчанию">
-            <lesson lesson_id="1"></lesson>
-            <lesson lesson_id="2"></lesson>
-            <lesson lesson_id="3"></lesson>
-            <lesson lesson_id="4"></lesson>
-        </shift>
-    </shift_list>
+    <table name="shift_list">
+        <rec id="1" caption="По умолчанию"></rec>
+    </table>
     
-    <subject_list>
-        <subject id="1" name="Русский яз"></subject>
-        <subject id="2" name="Математика"></subject>
-        <subject id="3" name="Физика"></subject>
-        <subject id="4" name="Химия"></subject>
-        <subject id="5" name="Литература"></subject>        
-    </subject_list>
+    <table name="shift_item">
+        <rec shift_id="1" lesson_id="1"></rec>
+        <rec shift_id="1" lesson_id="2"></rec>
+        <rec shift_id="1" lesson_id="3"></rec>
+        <rec shift_id="1" lesson_id="4"></rec>
+    </table>
+        
+
+    
+    <table name="subject">
+        <rec id="1" name="Русский яз" color="#ffeeee"></rec>
+        <rec id="2" name="Математика" color="#eeffee"></rec>
+        <rec id="3" name="Физика" color="#ffeeff"></rec>
+        <rec id="4" name="Химия" color="#ffccaa"></rec>
+        <rec id="5" name="Литература" color="#aaeeaa"></rec>        
+    </table>
     
     
     
-    <teacher_list>
-        <teacher id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна"></teacher>
-        <teacher id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна"></teacher>
-        <teacher id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна"></teacher>
-        <teacher id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна"></teacher>        
-    </teacher_list>
+    <table name="teacher">
+        <rec id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна"></rec>
+        <rec id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна"></rec>
+        <rec id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна"></rec>
+        <rec id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна"></rec>        
+    </table>
     
-    <room_list>
+    <table name="room">
         <room id="1" number="312" description=""></room>
         <room id="2" number="314" description=""></room>
         <room id="3" number="510" description=""></room>
         <room id="4" number="515" description=""></room>
-    </room_list>
+    </table>
     
-    <skill>
+    <table name="skill">
         <level id="1" caption="8-класс"></level>
         <level id="2" caption="9-класс"></level>
         <level id="3" caption="10-класс"></level>
         <level id="4" caption="11-класс"></level>
-    </skill>
+    </table>
     
-    <depart_list>
-        <depart id="1" skill_id="8" label="А" ></depart>
-        <depart id="1" skill_id="8" label="Б" ></depart>
-        <depart id="1" skill_id="8" label="В" ></depart>
-        <depart id="1"skill_id="9" label="А" ></depart>
-        <depart id="1" skill_id="9" label="Б" ></depart>
-        <depart id="1" skill_id="10" label="А" ></depart>
-        <depart id="1" skill_id="10" label="Б" ></depart>
-    </depart_list>
+    <table name="depart">
+        <rec id="1" skill_id="8" label="А" ></rec>
+        <rec id="2" skill_id="8" label="Б" ></rec>
+        <rec id="3" skill_id="8" label="В" ></rec>
+        <rec id="4" skill_id="9" label="А" ></rec>
+        <rec id="5" skill_id="9" label="Б" ></rec>
+        <rec id="6" skill_id="10" label="А" ></rec>
+        <rec id="7" skill_id="10" label="Б" ></rec>
+    </table>
+    
+    <table name="subject_group">
+        <rec depart_id="1" subject_id="1"></rec>
+        <rec depart_id="2" subject_id="2"></rec>
+        <rec depart_id="3" subject_id="3"></rec>
+        <rec depart_id="4" subject_id="4"></rec>
+    </table>>
+    
+    <table name="work_plan">
+        <rec day_id="1" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="1"></rec>
+        <rec day_id="1" lesson_id="2" group_id="2" subject_id="1" teacher_id="2" room_id="1"></rec>
+        <rec day_id="1" lesson_id="3" group_id="3" subject_id="2" teacher_id="3" room_id="2"></rec>
+        <rec day_id="1" lesson_id="4" group_id="4" subject_id="2" teacher_id="4" room_id="2"></rec>
+        <rec day_id="2" lesson_id="1" group_id="1" subject_id="3" teacher_id="1" room_id="3"></rec>
+        <rec day_id="2" lesson_id="2" group_id="2" subject_id="4" teacher_id="2" room_id="3"></rec>
+        <rec day_id="2" lesson_id="3" group_id="3" subject_id="3" teacher_id="3" room_id="4"></rec>
+        <rec day_id="3" lesson_id="4" group_id="4" subject_id="2" teacher_id="4" room_id="4"></rec>
+        <rec day_id="3" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="4"></rec>
+    </table>
     
 </root>

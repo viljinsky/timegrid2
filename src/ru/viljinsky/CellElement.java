@@ -23,7 +23,7 @@ public class CellElement {
     public static Integer HEIGHT = 40;
     Color color = new Color(255, 255, 200);
 
-    void draw(Graphics g, Rectangle b) {
+    public void draw(Graphics g, Rectangle b) {
         g.setColor(color);
         g.fillRect(b.x, b.y, b.width, b.height);
         if (selected) {

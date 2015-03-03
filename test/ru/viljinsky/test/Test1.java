@@ -10,33 +10,55 @@ package ru.viljinsky.test;
  *
  * @author вадик
  */
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import ru.viljinsky.*;
 
+class WorkPlanItem extends CellElement{
+    String subject_name;
+    BufferedImage image;
+    public WorkPlanItem(int day,int lesson,String subject_name){
+        this.subject_name=subject_name;
+        setCell(day, lesson);
+        image =   new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.createGraphics();
+        g.setColor(Color.red);
+        g.fillRect(1, 1, WIDTH, HEIGHT);
+        g.setColor(Color.blue);
+        g.drawString(subject_name, 1, 10 );
+    }
+    
+
+    @Override
+    public void draw(Graphics g, Rectangle b) {
+        super.draw(g, b); 
+        g.drawImage(image, b.x, b.y, b.width, b.height, null);
+    }
+    
+    
+}
+
 public class Test1 extends JFrame{
-    Set<CellElement> dragObjects = null;
+    TimeGrid grid = new TimeGrid();
+    
     public Test1(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        CellElement ce = new CellElement();
-        dragObjects = new HashSet<>();
-        dragObjects.add(new CellElement());
-        dragObjects.add(new CellElement());
-        dragObjects.add(new CellElement());
-        dragObjects.add(new CellElement());
-        dragObjects.add(ce);
+        setContentPane(grid);
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(grid.getMenu());
+        setJMenuBar(menuBar);
         
-        System.out.println(dragObjects.size());
-        System.out.println(dragObjects.contains(ce));
+        WorkPlanItem item ;
         
-        for (CellElement d:dragObjects){
-            System.out.println(d);
-        }
+        item = new WorkPlanItem(1,1,"Русский яз.");
+        grid.addElement(item);
     }
     public static void main(String[] args){
         Test1 frame = new Test1();
-        frame.setContentPane(new TimeGrid());
         frame.pack();
         frame.setVisible(true);
         

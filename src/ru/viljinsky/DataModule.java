@@ -62,64 +62,49 @@ public class DataModule {
         return group[group_id];
     }
     
-
-    static class Rdr extends DefaultHandler{
-
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            System.out.println(localName);
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            System.out.println(localName);
-        }
-
-        @Override
-        public void endDocument() throws SAXException {
-            System.out.println("end document");
-        }
-
-        @Override
-        public void startDocument() throws SAXException {
-            System.out.println("start document");
-        }
-        
-        public void execute(String path) throws Exception{
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            SAXParser saxParser = spf.newSAXParser();
-            XMLReader xmlReader = saxParser.getXMLReader();
-            xmlReader.setContentHandler(this);
-            xmlReader.parse(path);        
-            
+    
+    public void open(){
+        URL url = DataModule.class.getResource("schedule.xml");
+        if (url!=null){
+            try{
+                Parser parser = new Parser();
+                parser.open(url.getPath());
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         
     }
-    
+
     
     public static void main(String[] args){
-        URL url = DataModule.class.getResource("schedule.xml");
-        if (url!=null){
-            String path =url.getPath();
-            try{
-                BufferedReader br = new BufferedReader(new FileReader(path));
-                String l;
-                while ((l=br.readLine())!=null){
-                    System.out.println(l);
-                }
-                br.close();
-
-//                Rdr rdr = new Rdr();
+        
+        DataModule dataModule = DataModule.getInsatnce();
+        dataModule.open();
+        
+//        URL url = DataModule.class.getResource("schedule.xml");
+//        if (url!=null){
+//            try{
+//                Parser parser = new Parser();
+//                parser.open(url.getPath());
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//            String path =url.getPath();
+//            try{
+//
+//                Parser rdr = new Parser();
 //                rdr.execute(path);
-
-        
-            } catch (Exception e){
-                System.err.println(e.getMessage());
-                e.printStackTrace();
-                        
-            }
-        
-        }
+//
+//        
+//            } catch (Exception e){
+//                System.err.println(e.getMessage());
+//                e.printStackTrace();
+//                        
+//            }
+//        
+//        }
         
     }
     

@@ -18,7 +18,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 
@@ -88,22 +90,23 @@ class Cells extends ArrayList<CellElement>{
         return false;
     }
 
-    CellElement[] getCells(int col,int row){
-        ArrayList<Object> list = new ArrayList<Object>();
+    Set<CellElement> getCells(int col,int row){
+        Set<CellElement> list = new HashSet<>();
         for (CellElement ce:this){
             if (ce.col==col && ce.row==row)
                 list.add(ce);
         }
-        return list.toArray(new CellElement[list.size()]);
+        return list;//.toArray(new CellElement[list.size()]);
     }
 
-    public CellElement[] getSelected(){
-        List<CellElement> list = new ArrayList<>();
+    public Set<CellElement> getSelected(){
+        Set<CellElement> set = new HashSet<>();
         for (CellElement ce:this){
-            if (ce.selected)
-                list.add(ce);
+            if (ce.selected){
+                set.add(ce);
+            }
         }
-        return list.toArray(new CellElement[list.size()]);
+        return set;
     }
     
     
@@ -133,8 +136,8 @@ class DragObject{
 
 
 abstract class AbstractTimeGrid extends Container{
-    
-    DragObject[] dragObjects = null;
+
+    Set<DragObject> dragObjects = null;
     Cells cells;
     
     int colCount = 10;
@@ -285,14 +288,20 @@ abstract class AbstractTimeGrid extends Container{
                 if (!dragged){
                     startDrag(selectedCol,selectedRow);
                     
-                    List<DragObject> lst = new ArrayList<>();
+//                    List<DragObject> lst = new ArrayList<>();
+//                    
+//                    for (CellElement ce:cells){
+//                        if (ce.selected){
+//                            lst.add(new DragObject(ce));
+//                        }
+//                    }
+//                    dragObjects = lst.toArray(new DragObject[lst.size()]);
+                    dragObjects = new HashSet<>();
                     for (CellElement ce:cells){
                         if (ce.selected){
-                            lst.add(new DragObject(ce));
+                            dragObjects.add(new DragObject(ce));
                         }
                     }
-                    dragObjects = lst.toArray(new DragObject[lst.size()]);
-                    
                     dragged = true;
                 }
                 
@@ -329,6 +338,15 @@ abstract class AbstractTimeGrid extends Container{
         return result;
     }
     
+    private boolean CellElementIsDragged(CellElement ce){
+        if (dragObjects==null)
+            return false;
+        for (DragObject dro:dragObjects){
+            if (dro.element==ce)
+                return true;
+        }
+        return false;
+    }
     public void drawCell(Graphics g,int col,int row){
         Rectangle r;
         Color color = Color.pink;
@@ -349,15 +367,16 @@ abstract class AbstractTimeGrid extends Container{
         g.fillRect(r.x+1, r.y+1, r.width-2, r.height-2);
         //----------------------------------
         if (cells.isExists(col,row)){
-            CellElement[] list = cells.getCells(col, row);
+            Set<CellElement> list = cells.getCells(col, row);
             Rectangle r1 = new Rectangle(r);
-            r1.height = r.height / list.length;
+            r1.height = r.height / list.size();
             
             for (CellElement ce:list){
-//                if (dragObjects!=null && dragObjects.)
-                ce.bound=new Rectangle(r1.x+1,r1.y+1,r1.width-2,r1.height-2);
-                ce.draw(g,ce.bound);
-                r1.y+=r1.height;
+                if (!CellElementIsDragged(ce)){
+                    ce.bound=new Rectangle(r1.x+1,r1.y+1,r1.width-2,r1.height-2);
+                    ce.draw(g,ce.bound);
+                    r1.y+=r1.height;
+                }
             }
         }
     }
@@ -411,9 +430,7 @@ public class TimeGrid extends AbstractTimeGrid{
     @Override
     public void stopDrag(int col,int row){
         Cell cell = getSelectedCell();
-        System.out.println("Stop Drag "+cell+" "+col+" "+row);
-        CellElement[] list = cells.getSelected();
-        for (CellElement ce:list){
+        for (CellElement ce:cells.getSelected()){
             ce.col += col-cell.col;
             ce.row += row-cell.row;
         }
@@ -484,7 +501,7 @@ public class TimeGrid extends AbstractTimeGrid{
         }
 
         @Override
-        void draw(Graphics g,Rectangle b) {
+        public void draw(Graphics g,Rectangle b) {
             super.draw(g,b);
             String subject_name = dm.getSubjectName(subject_id);
             String teacher_name = dm.getTeacherName(teacher_id);
@@ -517,6 +534,15 @@ public class TimeGrid extends AbstractTimeGrid{
     public void load(){
         Chip chip ;
         cells.clear();
+        
+//        for (int i=0;i<colCount;i++){
+//            for (int j=0;j<rowCount;j++){
+//                 chip = new Chip(1,1, 1, 1);
+//                 chip.col=i;chip.row=j;
+//                 cells.add(chip);
+//            }
+//        }
+        
         
         chip = new Chip(1,1,1,1);
         chip.setCell(1,1);

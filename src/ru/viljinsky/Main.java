@@ -15,6 +15,11 @@ import javax.swing.JMenuBar;
  */
 public class Main {
     public static void main(String[] args){
+        DataModule dataModule = DataModule.getInsatnce();
+        dataModule.open();
+        
+        
+        
         TimeGrid timeGrid = new TimeGrid();
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(timeGrid.getMenu());
