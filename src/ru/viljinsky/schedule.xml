@@ -2,6 +2,10 @@
 <root>
     
     <table name="day_list">
+        <columns>
+            <column name="id" type="integer"></column>
+            <column name="caption"></column>
+        </columns>
         <primary key="id"></primary>
         <rec id="1" caption="Пн"></rec>
         <rec id="2" caption="Вт"></rec>
@@ -42,15 +46,18 @@
         <rec shift_id="1" lesson_id="4" day_id="1"></rec>
         
     </table>
-        
-
     
     <table name="subject" primary="id">
-        <rec id="1" name="Русский яз" color="#ffeeee"></rec>
-        <rec id="2" name="Математика" color="#eeffee"></rec>
-        <rec id="3" name="Физика" color="#ffeeff"></rec>
-        <rec id="4" name="Химия" color="#ffccaa"></rec>
-        <rec id="5" name="Литература" color="#aaeeaa"></rec>        
+        <columns>
+            <column name="id" type="integer"></column>
+            <column name="name" type="string"></column>
+            <column name="color" type="integer"></column>
+        </columns>
+        <rec id="1" name="Русский яз"   color="16755455"></rec>
+        <rec id="2" name="Математика"   color="16755387"></rec>
+        <rec id="3" name="Физика"       color="16755387"></rec>
+        <rec id="4" name="Химия"        color="16755387"></rec>
+        <rec id="5" name="Литература"   color="16755387"></rec>        
     </table>
     
     
@@ -81,6 +88,12 @@
     </table>
     
     <table name="depart">
+        <columns>
+            <column name="id" type="integer"></column>
+            <column name="skill_id"></column>
+            <column name="label" type="integer"></column>
+            <column name="shift_id" type="integer"></column>
+        </columns>
         <primary key="id"></primary>
         <lookup column="shift_id" references="shift.caption"></lookup>
         <rec id="1" skill_id="8" label="А" shift_id="3"></rec>

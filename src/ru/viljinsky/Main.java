@@ -6,7 +6,10 @@
 
 package ru.viljinsky;
 
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
 /**
@@ -55,7 +58,20 @@ public class Main {
         
         TTimeGrid timeGrid = new TTimeGrid();
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(timeGrid.getMenu());
+        menuBar.add(timeGrid.getGridMenu());
+        menuBar.add(timeGrid.getCellMenu());
+        
+        
+        JMenu menuData = new JMenu("Data");
+        menuData.add(new AbstractAction("Data") {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TestData.showTestData();
+            }
+        });
+        
+        menuBar.add(menuData);
         
         JFrame frame = new JFrame("TimeGrid2");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

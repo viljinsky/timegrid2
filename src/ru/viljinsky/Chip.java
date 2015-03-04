@@ -23,7 +23,10 @@ public  class Chip extends CellElement{
         int group_id;
         String teacher_name="???";
         String subject_name="???";
+        String room_no = "???";
+        String group_title="???";
         String depart_name;
+        Color subjectColor = new Color(255,200,220);
         
         DataModule dm = DataModule.getInsatnce();
         
@@ -36,6 +39,11 @@ public  class Chip extends CellElement{
             try{
                 teacher_name = (String) dm.lookUp("teacher", "id", teacher_id, "first_name");
                 subject_name = (String) dm.lookUp("subject", "id", subject_id, "name");
+                String s = (String) dm.lookUp("subject", "id", subject_id, "color");
+                Integer nn = Integer.parseInt(s);
+                subjectColor = new Color(nn);
+//                System.out.println("Subject color '"+s+"'"+nn+" "+String.format("%h", nn));
+//                System.out.println(String.format("---> %d", 0xffaaff));
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -46,13 +54,13 @@ public  class Chip extends CellElement{
             super.draw(g,b);
 //            String subject_name = dm.getSubjectName(subject_id);
 //            String teacher_name = dm.getTeacherName(teacher_id);
-            String room_no = dm.getRoomNo(room_id);
-            String group_title = dm.getGroupTitle(group_id);
+//            String room_no = dm.getRoomNo(room_id);
+//            String group_title = dm.getGroupTitle(group_id);
             
 
             Image image = new BufferedImage(b.width-1, b.height-1, BufferedImage.TYPE_INT_RGB);
             Graphics g1 = image.getGraphics();
-            g1.setColor(dm.getSubjectColor(subject_id));
+            g1.setColor(subjectColor);
             g1.fillRect(0, 0, b.width, b.height);
             
             int h = g1.getFontMetrics().getHeight();

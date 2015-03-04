@@ -12,171 +12,29 @@ package ru.viljinsky;
  */
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
-class Dataset extends ArrayList<Object[]>{
-    String name ;
-    Map<Integer,String> columns;
-    Map<String,String> lookup;
-    Set<String> primary;
-    
-    protected Integer index;
-    
-    public String getLookup(String columnName){
-        return lookup.get(columnName);
-    }
-
-    public String getTableName(){
-        return name;
-    }
-    
-    public void first(){
-        index = 0;
-    }
-    
-    public void next(){
-        if (index<size()){
-            index+=1;
-        }
-    }
-    
-    public void prior(){
-        if (index>0){
-            index-=1;
-        }
-    }
-    
-    public void last(){
-        index = size()-1;
-    }
-    
-    public boolean eof(){
-        return index>=size();
-    }
-    
-    public boolean bof(){
-        return index<=0;
-    }
-    
-    public Object getValue(String columnName){
-        Object[] rowset = get(index);
-        int n= getColumnIndex(columnName);
-        return rowset[n];
-    }
-    
-    public Integer getInteger(String columnName){
-        Object value = getValue(columnName);
-        if (value!=null){
-            return Integer.parseInt((String)value);
-        }
-        return null;
-    }
-    
-    public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
-        int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
-        if (n<0)
-            new Exception("column '"+columnName+"' not found");
-        if (k<0)
-            new Exception("column '"+searchName+"' not found");
-        
-        Integer value;
-        for (Object[] recordset:this){
-            value = Integer.parseInt((String)recordset[n]);
-            if (value.equals(columnValue)){
-                return recordset[k];
-            }
-        }
-        return null;
-    }
-
-    public Dataset(String name){
-        this.name=name;
-        columns = new HashMap<>();
-        lookup = new HashMap<>();
-        primary = new HashSet<>();
-    }
-
-    public int getColumnIndex(String columnName){
-        for (int n:columns.keySet()){
-            if (columns.get(n)==columnName){
-                return n;
-            }
-        }
-        return -1;
-    }
-
-    public Integer addColumn(String columnName){
-        int i = 0,n;
-        for (Iterator it=columns.keySet().iterator();it.hasNext();){
-            n=(Integer)it.next();
-            if (n>=i) i= n+1;
-        }
-        columns.put(i, columnName);
-        return i;
-    }
-
-    public String[] getColumns(){
-        String[] result = new String[columns.size()];
-        for (Iterator<Integer> it=columns.keySet().iterator();it.hasNext();){
-            int n= it.next();
-            result[n]=columns.get(n);
-        }
-        return result;
-    }
-
-    public void addRecord(Attributes attr){
-        String columnName ;
-        Integer columnIndex;
-        for (int i=0;i<attr.getLength();i++){
-            columnName = attr.getQName(i);
-            columnIndex = getColumnIndex(columnName);
-            if (columnIndex<0)
-                columnIndex = addColumn(columnName);
-        }
-
-        Object[] record = new Object[columns.size()];
-        for (int i=0;i<record.length;i++){
-            record[i]=attr.getValue(i);
-        }
-        super.add(record);
-
-    }
-
-    int getColumnCount() {
-        return columns.size();
-    }
-}
 
 public class Parser extends DefaultHandler{
 
     
-    Dataset dataset;
-    List<Dataset> tables;
+    private Dataset dataset;
     
-    
-    public Dataset getDataset(String tableName){
-        for (Dataset dataset: tables){
-            if (dataset.name.equals(tableName)){
-                return dataset;
-            }
-        }
-        return null;
+    public void open(String path) throws Exception{
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        SAXParser sp = spf.newSAXParser();
+        XMLReader reader = sp.getXMLReader();
+        reader.setContentHandler(this);
+        reader.parse(path);
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case "table":
-                tables.add(dataset);
+                addDataset(dataset);
                 break;
         }
     }
@@ -191,8 +49,11 @@ public class Parser extends DefaultHandler{
                 dataset.addRecord(attributes);
                 break;
                 
+            case "column":
+                
+                break;
+                
             case "primary":
-                System.out.println("primary");
                 String[] s = attributes.getValue("key").split(";");
                 for (String ss1:s){
                     dataset.primary.add(ss1);
@@ -200,7 +61,6 @@ public class Parser extends DefaultHandler{
                 
                 break;
             case "lookup":
-                System.out.println("lookup");
                 dataset.lookup.put(attributes.getValue("column"), attributes.getValue("references"));
                 break;
             case "foreigh":
@@ -209,14 +69,12 @@ public class Parser extends DefaultHandler{
                 
             default:
                 System.err.println("unknow '"+qName+"'");
-                        
         }
         
     }
 
     @Override
     public void startDocument() throws SAXException {
-        tables = new ArrayList<>();    
         System.out.println("Start document");
     }
     
@@ -224,34 +82,10 @@ public class Parser extends DefaultHandler{
     @Override
     public void endDocument() throws SAXException {
         System.out.println("Stop document");
-//        for (Dataset s:tables){
-//            System.out.println(s.name);
-//            System.out.println("----------");
-//            for (String columnName:s.getColumns()){
-//                System.out.println("column ->"+columnName);
-//            }
-//            for (Object[] rec:s){
-//                for (int i=0;i<rec.length;i++){
-//                    System.out.println(rec[i].toString());
-//                }
-//            }
-//        }
     }
-    
-    XMLReader reader;
-    
-    public Parser() throws Exception{
-        SAXParserFactory spf = SAXParserFactory.newInstance();
-        SAXParser sp = spf.newSAXParser();
-        reader = sp.getXMLReader();
-        reader.setContentHandler(this);
+
+    public void addDataset(Dataset dataset){
     }
-    
-    public void open(String path) throws Exception{
-        reader.parse(path);
-    }
-    
-    
 
     public static void main(String[] args) {
         Parser parser;
@@ -261,29 +95,12 @@ public class Parser extends DefaultHandler{
             try{
                 parser = new Parser();
                 parser.open(url.getPath());
-
-             Dataset ds = parser.getDataset("teacher");
-             Object[] rs;
-             for (int i=0;i<ds.size();i++){
-                 rs = ds.get(i);
-                 System.out.println(rs);
-             }
-             
-             
-             ds.first();
-             while (!ds.eof()){
-                 System.out.println(ds.getValue("id")+" "+ ds.getValue("first_name"));
-                 ds.next();
-             }
-                
                 
             } catch (Exception e){
                 e.printStackTrace();
             }
             
         }
-        
-        
     }
     
 }

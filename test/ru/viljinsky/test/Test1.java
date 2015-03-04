@@ -49,7 +49,7 @@ public class Test1 extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setContentPane(grid);
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(grid.getMenu());
+        menuBar.add(grid.getGridMenu());
         setJMenuBar(menuBar);
         
         WorkPlanItem item ;
