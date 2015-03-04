@@ -57,16 +57,12 @@ public class DataModule {
         }
         return result.toArray(new String[tables.size()]);
     }
-
-//    public Iterable<Dataset> getTableNames() {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
     
     class DataParser extends Parser{
 
         @Override
         public void addDataset(Dataset dataset) {
-            System.out.println("table '"+dataset.getTableName()+"' OK");
+//            System.out.println("table '"+dataset.getTableName()+"' OK");
             tables.add(dataset);
         }
         
@@ -92,6 +88,9 @@ public class DataModule {
     }
     
     public void save(String path){
+        XMLExport xmlExport = new XMLExport(instance);
+        xmlExport.execute();
+        xmlExport.save(path);
     }
 
     

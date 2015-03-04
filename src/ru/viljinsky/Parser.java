@@ -64,7 +64,7 @@ public class Parser extends DefaultHandler{
                 dataset.lookup.put(attributes.getValue("column"), attributes.getValue("references"));
                 break;
             case "foreigh":
-                System.out.println("foreigh");
+//                System.out.println("foreigh");
                 break;
                 
             default:
