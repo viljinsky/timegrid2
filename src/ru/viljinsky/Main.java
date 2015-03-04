@@ -20,7 +20,7 @@ class TTimeGrid extends TimeGrid{
     public void load() {
         cells.clear();
         Chip chip;
-        Dataset ds = dm.getTable("work_plan");
+        Dataset ds = dm.getTable("schedule");
         ds.first();
         while (!ds.eof()){
             chip = new ru.viljinsky.Chip(ds.getInteger("subject_id"),ds.getInteger("teacher_id"),

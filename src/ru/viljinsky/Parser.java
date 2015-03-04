@@ -14,9 +14,11 @@ package ru.viljinsky;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
@@ -24,8 +26,14 @@ import org.xml.sax.helpers.*;
 class Dataset extends ArrayList<Object[]>{
     String name ;
     Map<Integer,String> columns;
+    Map<String,String> lookup;
+    Set<String> primary;
     
     protected Integer index;
+    
+    public String getLookup(String columnName){
+        return lookup.get(columnName);
+    }
 
     public String getTableName(){
         return name;
@@ -93,6 +101,8 @@ class Dataset extends ArrayList<Object[]>{
     public Dataset(String name){
         this.name=name;
         columns = new HashMap<>();
+        lookup = new HashMap<>();
+        primary = new HashSet<>();
     }
 
     public int getColumnIndex(String columnName){
@@ -140,6 +150,10 @@ class Dataset extends ArrayList<Object[]>{
         super.add(record);
 
     }
+
+    int getColumnCount() {
+        return columns.size();
+    }
 }
 
 public class Parser extends DefaultHandler{
@@ -176,6 +190,26 @@ public class Parser extends DefaultHandler{
             case "rec":
                 dataset.addRecord(attributes);
                 break;
+                
+            case "primary":
+                System.out.println("primary");
+                String[] s = attributes.getValue("key").split(";");
+                for (String ss1:s){
+                    dataset.primary.add(ss1);
+                }
+                
+                break;
+            case "lookup":
+                System.out.println("lookup");
+                dataset.lookup.put(attributes.getValue("column"), attributes.getValue("references"));
+                break;
+            case "foreigh":
+                System.out.println("foreigh");
+                break;
+                
+            default:
+                System.err.println("unknow '"+qName+"'");
+                        
         }
         
     }
