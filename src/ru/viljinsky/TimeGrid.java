@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 /**
  *
@@ -260,8 +261,16 @@ public class TimeGrid extends AbstractTimeGrid{
     }
     
     public static void main(String[] args){
+        TimeGrid timeGrid = new TimeGrid();
+        
         JFrame frame = new JFrame("Test 'TimeGrid'");
-        frame.setContentPane(new TimeGrid());
+        frame.setContentPane(timeGrid);
+        timeGrid.addElement(new CellElement());
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(timeGrid.getGridMenu());
+        menuBar.add(timeGrid.getCellMenu());
+        frame.setJMenuBar(menuBar);
+        
         frame.pack();
         frame.setVisible(true);
     }

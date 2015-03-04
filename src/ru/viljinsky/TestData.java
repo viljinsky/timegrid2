@@ -7,7 +7,9 @@
 package ru.viljinsky;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,59 +31,59 @@ import ru.viljinsky.dialogs.DatasetEntryDialog;
  * @author вадик
  */
 
-class DatasetCover {
-    Dataset dataset;
-    public DatasetCover(Dataset dataset){
-        this.dataset=dataset;
-    }
-
-    public void first() {
-        dataset.first();
-    }
-
-    public void next() {
-        dataset.next();
-    }
-
-    public void prior() {
-        dataset.prior();
-    }
-
-    public void last() {
-        dataset.last();
-    }
-
-    public boolean eof() {
-        return dataset.eof();
-    }
-
-    public boolean bof() {
-        return dataset.bof();
-    }
-
-    int getColumnCount() {
-        return dataset.getColumnCount();
-    }
-
-    public Integer getRowCount() {
-        return dataset.getRowCount();
-    }
-
-    public String getColumnName(Integer columnIndex) {
-        return dataset.getColumnName(columnIndex);
-    }
-
-    public Object[] getRowset(Integer rowIndex) {
-        return dataset.getRowset(rowIndex);
-    }
-    
-}
+//class DatasetCover {
+//    Dataset dataset;
+//    public DatasetCover(Dataset dataset){
+//        this.dataset=dataset;
+//    }
+//
+//    public void first() {
+//        dataset.first();
+//    }
+//
+//    public void next() {
+//        dataset.next();
+//    }
+//
+//    public void prior() {
+//        dataset.prior();
+//    }
+//
+//    public void last() {
+//        dataset.last();
+//    }
+//
+//    public boolean eof() {
+//        return dataset.eof();
+//    }
+//
+//    public boolean bof() {
+//        return dataset.bof();
+//    }
+//
+//    int getColumnCount() {
+//        return dataset.getColumnCount();
+//    }
+//
+//    public Integer getRowCount() {
+//        return dataset.getRowCount();
+//    }
+//
+//    public String getColumnName(Integer columnIndex) {
+//        return dataset.getColumnName(columnIndex);
+//    }
+//
+//    public Object[] getRowset(Integer rowIndex) {
+//        return dataset.getRowset(rowIndex);
+//    }
+//    
+//}
 
 class GridModel extends AbstractTableModel{
-    DatasetCover dataset;
+    Dataset dataset;
     
     public GridModel(Dataset dataset){
-        this.dataset=new DatasetCover(dataset);
+        this.dataset=dataset;
     }
     
     @Override
@@ -97,17 +99,24 @@ class GridModel extends AbstractTableModel{
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object[] recordset = dataset.getRowset(rowIndex);
-        String columnName = dataset.getColumnName(columnIndex);
         return recordset[columnIndex];
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+         Object[] rowset = dataset.get(rowIndex);
+         rowset[columnIndex]=aValue;
     }
 
     @Override
     public String getColumnName(int column) {
         return dataset.getColumnName(column);
     }
-    
-    
-    
     
 }
 
@@ -133,109 +142,3 @@ class Grid extends JTable{
     }
 }
 
-class DataPanel extends JTabbedPane{
-    DataModule dataModule = DataModule.getInsatnce();
-    public DataPanel(){
-        getModel().addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int n = DataPanel.this.getSelectedIndex();
-                System.out.println("!!!! ->"+DataPanel.this.getSelectedIndex());
-                Dataset dataset = dataModule.getTable(n);
-                System.out.println(dataset.primary);
-                System.out.println(dataset.lookup);
-            }
-        });
-        
-        try{
-            for (Dataset dataset:dataModule.tables){
-                addTab(dataset.getTableName(),new JScrollPane(new Grid(dataset.getTableName())));
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-}
-
-
-public class TestData  extends JFrame {
-    static DataModule dataModule = DataModule.getInsatnce();
-    DataPanel dataPanel ;
-    
-    class DataAction extends AbstractAction{
-
-        public DataAction(String name) {
-            super(name);
-        }
-        
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            doCommand(e.getActionCommand());
-            
-        }
-    }
-    
-    public void doCommand(String command){
-        System.out.println(command);
-        int n = dataPanel.getSelectedIndex();
-        Dataset ds = dataModule.getTable(n);
-        
-        
-        switch (command){
-            case "add":
-                ds.addEmptyRecord();
-                break;
-            case "edit":
-                
-                
-                
-                DatasetEntryDialog dlg = new DatasetEntryDialog();
-                dlg.setDataset(ds);
-                dlg.pack();
-                dlg.setVisible(true);
-                if (dlg.modalResult==BaseDialog.RESULT_OK){
-                    JOptionPane.showMessageDialog(rootPane, "OK");
-                }
-                break;
-            case "delete":
-                ds.delete();
-                break;
-        }
-    }
-    
-    public TestData(){
-        super("TestData");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        dataModule.open();
-        dataPanel = new DataPanel();
-        setContentPane(dataPanel);
-        
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("data");
-        menu.add(new DataAction("add"));
-        menu.add(new DataAction("edit"));
-        menu.add(new DataAction("delete"));
-        
-        menu.addSeparator();
-        
-        menu.add(new DataAction("open"));
-        menu.add(new DataAction("save"));
-        menuBar.add(menu);
-        setJMenuBar(menuBar);
-        
-    }
-    
-    public static void showTestData(){
-        TestData frame = new TestData();
-        frame.pack();
-        frame.setVisible(true);
-        
-    }
-    
-    public static void main(String[] args){
-        showTestData();
-    }
-    
-}

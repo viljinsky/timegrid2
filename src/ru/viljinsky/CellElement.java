@@ -15,8 +15,8 @@ import java.awt.Rectangle;
  * @author вадик
  */
 public class CellElement {
-    int col;
-    int row;
+    int col=1;
+    int row=1;
     boolean selected = false;
     Rectangle bound;
     public static Integer WIDTH = 60;

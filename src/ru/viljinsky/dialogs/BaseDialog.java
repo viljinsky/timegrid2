@@ -10,9 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
@@ -28,7 +30,24 @@ public class BaseDialog extends JDialog {
     public static final int RESULT_RETRY = 4;
     public int modalResult = RESULT_NONE;
     
+    public BaseDialog(JComponent owner){
+        prepare();
+        int x,y;
+        Point d = owner.getLocationOnScreen();
+        Dimension z = owner.getSize();
+//        Dimension s = getSize();
+        x=d.x+(z.width-getWidth())/2;
+        y=d.y+(z.height-getHeight())/2;
+                
+        setLocation(x, y);
+        
+    }
+    
     public BaseDialog(){
+        prepare();
+    }
+    
+    protected void prepare(){
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setModal(true);
         Container content = getContentPane();
@@ -61,11 +80,14 @@ public class BaseDialog extends JDialog {
         JPanel panel = new JPanel();
         initComponents(panel);
         content.add(panel,BorderLayout.CENTER);
-        
+        pack();
         
     }
     
     public void initComponents(Container content){
     }
     
+    public int getModalResult(){
+        return modalResult;
+    }
 }

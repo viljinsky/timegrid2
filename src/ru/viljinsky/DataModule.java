@@ -9,7 +9,9 @@ package ru.viljinsky;
 import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -48,6 +50,18 @@ public class DataModule {
         return tables.get(index);
     }
     
+    public String[] getTableNames(){
+        Set<String> result = new HashSet<>();
+        for (Dataset dataset:tables){
+            result.add(dataset.tableName);
+        }
+        return result.toArray(new String[tables.size()]);
+    }
+
+//    public Iterable<Dataset> getTableNames() {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+    
     class DataParser extends Parser{
 
         @Override
@@ -59,17 +73,25 @@ public class DataModule {
     }
     
     public void open(){
-        tables = new ArrayList<>();
+//        tables = new ArrayList<>();
         URL url = DataModule.class.getResource("schedule.xml");
         if (url!=null){
-            try{
-                Parser parser = new DataParser();
-                parser.open(url.getPath());
-                active = true;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            open(url.getPath());
         }
+    }
+    
+    public void open(String path){
+        tables = new ArrayList<>();
+        try{
+            Parser parser = new DataParser();
+            parser.open(path);
+            active = true;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void save(String path){
     }
 
     

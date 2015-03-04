@@ -18,6 +18,13 @@ public class DatasetEntryDialog extends BaseDialog {
     Dataset dataset;
     Container content;
 
+    public DatasetEntryDialog(JComponent owner) {
+        super(owner);
+    }
+
+
+    
+
     @Override
     public void initComponents(Container content) {
         this.content=content;
@@ -33,6 +40,7 @@ public class DatasetEntryDialog extends BaseDialog {
     }
     
     public void setDataset(Dataset dataset){
+        setTitle(dataset.getTableName());
         for (String s:dataset.getColumns()){
             Box box  = Box.createHorizontalBox();
             box.add(new JLabel(s));

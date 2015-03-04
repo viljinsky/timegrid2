@@ -117,11 +117,11 @@
     </table>
     
     <table name="subject_group">
-        <rec depart_id="1" subject_id="1" group_type_id="1"></rec>
-        <rec depart_id="2" subject_id="2" group_type_id="1"></rec>
-        <rec depart_id="3" subject_id="3"></rec>
-        <rec depart_id="4" subject_id="4"></rec>
-    </table>>
+        <rec id="1" depart_id="1" subject_id="1" group_type_id="1"></rec>
+        <rec id="2" depart_id="2" subject_id="2" group_type_id="1"></rec>
+        <rec id="3" depart_id="3" subject_id="3"></rec>
+        <rec id="4" depart_id="4" subject_id="4"></rec>
+    </table>
     <table name="curriculum">
         <rec skill_id="1" subject_id="1" hour_per_week="1"></rec>
     </table>

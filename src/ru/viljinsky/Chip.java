@@ -39,6 +39,8 @@ public  class Chip extends CellElement{
             try{
                 teacher_name = (String) dm.lookUp("teacher", "id", teacher_id, "first_name");
                 subject_name = (String) dm.lookUp("subject", "id", subject_id, "name");
+                room_no = (String) dm.lookUp("room", "id", room_id, "number");
+                group_title = (String) dm.lookUp("subject_group", "id", group_id , "subject_id");
                 String s = (String) dm.lookUp("subject", "id", subject_id, "color");
                 Integer nn = Integer.parseInt(s);
                 subjectColor = new Color(nn);

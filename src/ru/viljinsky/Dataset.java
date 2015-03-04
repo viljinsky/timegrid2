@@ -24,7 +24,7 @@ public class Dataset extends ArrayList<Object[]>{
     Map<String,String> lookup;
     Set<String> primary;
 
-    protected Integer index;
+    protected Integer index=-1;
     
     public Dataset(String tableName){
         this.tableName=tableName;
@@ -33,6 +33,10 @@ public class Dataset extends ArrayList<Object[]>{
         primary = new HashSet<>();
     }
 
+    public String[] getPrimary(){
+        return primary.toArray(new String[primary.size()]);
+    }
+    
     
     public String getLookup(String columnName){
         return lookup.get(columnName);
