@@ -41,7 +41,7 @@ public class Main {
     
     public static void main(String[] args){
         DataModule dataModule = DataModule.getInsatnce();
-        dataModule.open("test.xml");
+        dataModule.open();
         
         Dataset ds = dataModule.getTable("work_plan");
         ds.first();
@@ -67,7 +67,7 @@ public class Main {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                TestData2.showTestData();
+                DataManager.showTestData();
             }
         });
         

@@ -28,7 +28,7 @@ import ru.viljinsky.dialogs.DatasetEntryDialog;
  * @author вадик
  */
 
-public class TestData2 extends JFrame{
+public class DataManager extends JFrame{
 
     
     
@@ -41,7 +41,7 @@ public class TestData2 extends JFrame{
     
     
     
-    public TestData2(){
+    public DataManager(){
         getContentPane().setPreferredSize(new Dimension(600,700));
         add(tabPanel);
         updateActionList();
@@ -60,9 +60,17 @@ public class TestData2 extends JFrame{
         }
     }
 
+    public void opennew(){
+        dataModule.open();
+        setTitle("new schedule");
+        afterOpen();
+        dataPath="schedule.xml";
+        dataFile=new File("schedule.xml");
+    }
+    
     public void open(){
         JFileChooser fc = new JFileChooser(dataFile);
-        int retVal = fc.showOpenDialog(TestData2.this);
+        int retVal = fc.showOpenDialog(DataManager.this);
         if (retVal== JFileChooser.APPROVE_OPTION){
             dataFile = fc.getSelectedFile();
             dataModule.open(dataFile.getPath());
@@ -87,7 +95,7 @@ public class TestData2 extends JFrame{
     
     public void saveAs(){
         JFileChooser fc = new JFileChooser(dataFile);
-        int retVal = fc.showSaveDialog(TestData2.this);
+        int retVal = fc.showSaveDialog(DataManager.this);
         if (retVal==JFileChooser.APPROVE_OPTION){
             dataFile = fc.getSelectedFile();
             dataModule.save(dataFile.getPath());
@@ -161,6 +169,9 @@ public class TestData2 extends JFrame{
     
     public void doCommand(String command){
         switch(command){
+            case "new":
+                opennew();
+                break;
             case "open":
                 open();
                 break;
@@ -206,7 +217,7 @@ public class TestData2 extends JFrame{
         }
     }
     
-    Action[] dataAction = {new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("exit")};
+    Action[] dataAction = {new Act("new"),new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("exit")};
     Action[] datasetAction = {new Act("append"),new Act("edit"),new Act("delete"),new Act("refresh")};
     
     public JMenu getDataMenu(){
@@ -229,7 +240,7 @@ public class TestData2 extends JFrame{
     }
     
     public static void showTestData(){
-        TestData2 frame = new TestData2();
+        DataManager frame = new DataManager();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(frame.getDataMenu());
