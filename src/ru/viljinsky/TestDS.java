@@ -31,7 +31,6 @@ public class TestDS {
                 values.put("curriculum_id", curriculum.getValue("id"));
                 values.put("subject_id", subject.getValue("id"));
                 curriculum_item.append(values);
-//                curriculum_item.append(values);
                 subject.next();
             }
             curriculum.next();
@@ -56,14 +55,10 @@ public class TestDS {
             while (!day_list.eof()){
                 lessons.first();
                 while (!lessons.eof()){
-//                    values = new HashMap<>();
                     values.put("shift_id",shift.getValue("id"));
                     values.put("day_id",day_list.getValue("id"));
                     values.put("lesson_id",lessons.getValue("id"));
-                    
                     shift_item.append(values);
-                    
-//                    shift_item.append(new Object[]{shift.getValue("id"),day_list.getValue("id"),lessons.getValue("id")});
                     lessons.next();
                 }
                 day_list.next();

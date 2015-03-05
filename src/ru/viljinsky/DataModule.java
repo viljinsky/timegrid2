@@ -6,7 +6,6 @@
 
 package ru.viljinsky;
 
-import java.awt.Color;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,22 +61,20 @@ public class DataModule {
     }
 
     void close() {
-//        tables.clear();
-//        active=false;
+        tables.clear();
+        active=false;
     }
     
     class DataParser extends Parser{
 
         @Override
         public void addDataset(Dataset dataset) {
-//            System.out.println("table '"+dataset.getTableName()+"' OK");
             tables.add(dataset);
         }
         
     }
     
     public void open(){
-//        tables = new ArrayList<>();
         URL url = DataModule.class.getResource("schedule.xml");
         if (url!=null){
             open(url.getPath());
