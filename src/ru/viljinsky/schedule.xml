@@ -37,7 +37,7 @@
     <table name="shift_item">
         <primary key="shift_id;lesson_id;day_id"></primary>
         <lookup column="lesson_id" references="lesson.time_begin;lesson.time_end"></lookup>
-        <lookup column="day_id" references="day.caption"></lookup>    
+        <lookup column="day_id" references="day_list.caption"></lookup>    
         <foreigh key="shift_id" references="shift.id"></foreigh>
             
         <rec shift_id="1" lesson_id="1" day_id="1"></rec>
@@ -48,11 +48,9 @@
     </table>
     
     <table name="subject" primary="id">
-        <columns>
-            <column name="id" type="integer"></column>
-            <column name="name" type="string"></column>
-            <column name="color" type="integer"></column>
-        </columns>
+        <column name="id" type="integer"></column>
+        <column name="name" type="string"></column>
+        <column name="color" type="integer"></column>
         <rec id="1" name="Русский яз"   color="0xFF00FF"></rec>
         <rec id="2" name="Математика"   color="0xFF00FF"></rec>
         <rec id="3" name="Физика"       color="0xFFFFFF"></rec>
@@ -81,11 +79,13 @@
     </table>
     
     <table name="skill">
+        <primary key="id"></primary>
         <rec id="1" caption="8-класс"></rec>
         <rec id="2" caption="9-класс"></rec>
         <rec id="3" caption="10-класс"></rec>
         <rec id="4" caption="11-класс"></rec>
     </table>
+    
     
     <table name="depart">
         <columns>
@@ -97,34 +97,37 @@
         </columns>
         <primary key="id"></primary>
         <lookup column="shift_id" references="shift.caption"></lookup>
-        <rec id="1" skill_id="8" label="А" curriculum_id="1" shift_id="3"></rec>
-        <rec id="2" skill_id="8" label="Б" curriculum_id="1" shift_id="3"></rec>
-        <rec id="3" skill_id="8" label="В" curriculum_id="1" shift_id="3"></rec>
-        <rec id="4" skill_id="9" label="А" curriculum_id="1" shift_id="3"></rec>
-        <rec id="5" skill_id="9" label="Б" curriculum_id="1" shift_id="3"></rec>
-        <rec id="6" skill_id="10" label="А" curriculum_id="1" shift_id="3"></rec>
-        <rec id="7" skill_id="10" label="Б" curriculum_id="1" shift_id="3"></rec>
+        <rec id="1" skill_id="1" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="2" skill_id="1" label="Б" curriculum_id="1" shift_id="3"></rec>
+        <rec id="3" skill_id="1" label="В" curriculum_id="1" shift_id="3"></rec>
+        <rec id="4" skill_id="2" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="5" skill_id="2" label="Б" curriculum_id="1" shift_id="3"></rec>
+        <rec id="6" skill_id="3" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="7" skill_id="3" label="Б" curriculum_id="1" shift_id="3"></rec>
         <primary key="id"></primary>
         <foreigh key="skill_id" references="skill"></foreigh>
+        
+        <lookup column="skill_id" references="skill.caption"></lookup>
+        <lookup column="curriculum_id" references="curriculum.description"></lookup>
+        <lookup column="shift_id" references="shift.caption"></lookup>
     </table>
     
-    <table name="group_type">
-        <rec id="1" caption="М" description=""></rec>
-        <rec id="2" caption="Д" description=""></rec>
-        <rec id="3" caption="1" description=""></rec>
-        <rec id="4" caption="2" description=""></rec>
-        <rec id="5" caption="3" description=""></rec>
-        <rec id="6" caption="4" description=""></rec>
+    <table name="group_type" primary="id">
+        <rec id="0" caption=""  description="Весь класс"></rec>
+        <rec id="1" caption="М/Д" description=""></rec>
+        <rec id="2" caption="12.." description=""></rec>
     </table>
     
     <table name="subject_group">
-        <rec id="1" depart_id="1" subject_id="1" group_type_id="1"></rec>
-        <rec id="2" depart_id="2" subject_id="2" group_type_id="1"></rec>
-        <rec id="3" depart_id="3" subject_id="3"></rec>
-        <rec id="4" depart_id="4" subject_id="4"></rec>
+        <rec id="1" depart_id="1" subject_id="1" group_type_id="0"></rec>
+        <rec id="2" depart_id="2" subject_id="2" group_type_id="0"></rec>
+        <rec id="3" depart_id="3" subject_id="3" group_type_id="1"></rec>
+        <rec id="4" depart_id="4" subject_id="4" group_type_id="2"></rec>
+        <lookup column="group_type_id" references="group_type.caption"></lookup>
+        <lookup column="subject_id" references="subject.name"></lookup>
     </table>
     
-    <table name="curriculum">
+    <table name="curriculum" primary="id">
         <rec id="1" description="Учебный план 1"></rec>
     </table>
     

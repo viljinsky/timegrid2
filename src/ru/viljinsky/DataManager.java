@@ -9,6 +9,8 @@ package ru.viljinsky;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Map;
 import javax.swing.AbstractAction;
@@ -19,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -56,6 +59,31 @@ public class DataManager extends JFrame{
             this.dataset=dataset;
             grid = new Grid(dataset);
             add(new JScrollPane(grid));
+            
+            grid.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    showPopup(e);
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showPopup(e);
+                }
+            });
+            
+        }
+        
+        public void showPopup(MouseEvent e){
+            if (e.isPopupTrigger()){
+                int x = e.getX();int y=e.getY();
+                JPopupMenu popup = new JPopupMenu();
+                for (Action act:datasetAction){
+                    popup.add(act);
+                }
+                popup.show(grid, x, y);
+            }
         }
         
         public void append(){
@@ -210,92 +238,89 @@ public class DataManager extends JFrame{
     }
     
     public void updateAction(Action act){
-//        boolean b = selectedDataset!=null;
-//        
-//        boolean b1 = (b?selectedDataset.index>=0:false);
-        
         String command = (String)act.getValue(AbstractAction.ACTION_COMMAND_KEY);
         switch (command){
             
-//            case "save":
-//            case "saveAs":
-//                act.setEnabled(dataPath!=null);
-//                break;
+            case "save":
+                break;
+            case "saveAs":
+                break;
                 
             case "append":
-//                act.setEnabled(b);
                 break;    
+                
             case "edit":
-//                act.setEnabled(b1);
                 break;    
+                
             case "delete":
-//                act.setEnabled(b1);
                 break;    
+                
             case "refresh":
-//                act.setEnabled(b);
                 break;    
         }
     }
     
     public void doCommand(String command){
         try{
-        switch(command){
-            
-            case "fill_shift":
-                TestDS.fillShift();
+            switch(command){
+
+                case "fill_shift":
+                    TestDS.fillShift();
+                    break;
+
+                case "fill_curriculumn":
+                    TestDS.fillCurriculum();
+                    break;
+
+                case "new":
+                    opennew();
+                    break;
+
+                case "open":
+                    open();
+                    break;
+
+                case "close":
+                    dataModule.close();
+                    tabPanel.removeAll();
+                    break;
+
+                case "save":
+                    save();
+                    break;
+
+                case "saveAs":
+                    saveAs();
+                    break;
+
+                case "exit":
+                    exit();
+                    break;
+
+                case "append":
+                    append();
                 break;
-                
-            case "fill_curriculumn":
-                TestDS.fillCurriculum();
-                break;
-                
-            case "new":
-                opennew();
-                break;
-                
-            case "open":
-                open();
-                break;
-                
-            case "close":
-                dataModule.close();
-                tabPanel.removeAll();
-                break;
-                
-            case "save":
-                save();
-                break;
-                
-            case "saveAs":
-                saveAs();
-                break;
-                
-            case "exit":
-                exit();
-                break;
-                
-            case "append":
-                append();
-            break;
-                
-            case "edit":
-                
-                edit();
-                break;
-                
-            case "delete":
-                delete();
-                break;
-                
-            case "refresh":
-                refresh();
-                break;
-                
-            default:
-                    System.err.println(String.format("неизвестная комманда \"%s\"",command));
-        }
+
+                case "edit":
+
+                    edit();
+                    break;
+
+                case "delete":
+                    delete();
+                    break;
+
+                case "refresh":
+                    refresh();
+                    break;
+
+                default:
+                        System.err.println(String.format("неизвестная комманда \"%s\"",command));
+            }
             updateActionList();
+            
         } catch (Exception e){
+            
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, e.getMessage());
             

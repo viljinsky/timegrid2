@@ -41,9 +41,17 @@ public class Parser extends DefaultHandler{
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        String[] s;
         switch (qName){
             case "table":
                 dataset = new Dataset(attributes.getValue("name"));
+                if (attributes.getValue("primary")!=null){
+                    s=attributes.getValue("primary").split(";");
+                    for (String ss1:s){
+                        dataset.primary.add(ss1);
+                    }
+                    
+                }
                 break;
             case "rec":
                 dataset.addRecord(attributes);
@@ -54,7 +62,7 @@ public class Parser extends DefaultHandler{
                 break;
                 
             case "primary":
-                String[] s = attributes.getValue("key").split(";");
+                s = attributes.getValue("key").split(";");
                 for (String ss1:s){
                     dataset.primary.add(ss1);
                 }
