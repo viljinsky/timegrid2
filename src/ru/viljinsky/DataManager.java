@@ -9,6 +9,7 @@ package ru.viljinsky;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -85,7 +86,7 @@ public class DataManager extends JFrame{
     protected void afterOpen(){
         tabPanel.removeAll();
         for (Dataset dataset:dataModule.tables){
-            tabPanel.addTab(dataset.tableName,new JScrollPane( new Grid(dataset.tableName)));
+            tabPanel.addTab(dataset.tableName,new JScrollPane( new Grid(dataset)));
         }
     }
     
@@ -117,15 +118,40 @@ public class DataManager extends JFrame{
     }
     
     public void append(){
-    }
-    
-    public void edit(){
-        if (selectedDataset!=null){
+        Map<String,Object> values;
+        if(selectedDataset!=null){
             DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
             dlg.setDataset(selectedDataset);
             dlg.setVisible(true);
             if (dlg.getModalResult()==BaseDialog.RESULT_OK){
-                JOptionPane.showMessageDialog(rootPane, "OK");
+                try{
+                    values = dlg.getValues();
+                    selectedDataset.append(values);
+                    JOptionPane.showMessageDialog(rootPane, "OK");
+                } catch (Exception e){
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(rootPane, e.getMessage());
+                }
+            }
+        }
+    }
+    
+    public void edit(){
+        Map<String,Object> values;
+        if (selectedDataset!=null){
+            DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
+            dlg.setDataset(selectedDataset);
+            dlg.setValues(selectedDataset.getValue());
+            dlg.setVisible(true);
+            if (dlg.getModalResult()==BaseDialog.RESULT_OK){
+                try{
+                    values = dlg.getValues();
+                    selectedDataset.update(values);
+                    JOptionPane.showMessageDialog(rootPane, "OK");
+                } catch (Exception e){
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(rootPane, e.getMessage());
+                }
             }
         }
     }
@@ -167,13 +193,13 @@ public class DataManager extends JFrame{
 //                break;
                 
             case "append":
-                act.setEnabled(b);
+//                act.setEnabled(b);
                 break;    
             case "edit":
 //                act.setEnabled(b1);
                 break;    
             case "delete":
-                act.setEnabled(b1);
+//                act.setEnabled(b1);
                 break;    
             case "refresh":
                 act.setEnabled(b);
@@ -182,7 +208,15 @@ public class DataManager extends JFrame{
     }
     
     public void doCommand(String command){
+        try{
         switch(command){
+            case "fill_shift":
+                TestDS.fillShift();
+                break;
+                
+            case "fill_curriculumn":
+                TestDS.fillCurriculum();
+                break;
             case "new":
                 opennew();
                 break;
@@ -190,9 +224,8 @@ public class DataManager extends JFrame{
                 open();
                 break;
             case "close":
-                tabPanel.removeAll();
-                remove(tabPanel);
                 dataModule.close();
+                tabPanel.removeAll();
                 break;
             case "save":
                 save();
@@ -219,7 +252,12 @@ public class DataManager extends JFrame{
             default:
                     System.err.println(String.format("неизвестная комманда \"%s\"",command));
         }
-        updateActionList();
+            updateActionList();
+        } catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            
+        }
     }
     
     class Act extends AbstractAction{
@@ -236,8 +274,9 @@ public class DataManager extends JFrame{
         }
     }
     
-    Action[] dataAction = {new Act("new"),new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("close"), new Act("exit")};
+    Action[] dataAction = {new Act("test"), new Act("new"),new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("close"), new Act("exit")};
     Action[] datasetAction = {new Act("append"),new Act("edit"),new Act("delete"),new Act("refresh")};
+    Action[] testAction = {new Act("fill_shift"),new Act("fill_curriculumn")};
     
     public JMenu getDataMenu(){
         JMenu menu = new JMenu("Data");
@@ -264,6 +303,15 @@ public class DataManager extends JFrame{
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(frame.getDataMenu());
         menuBar.add(frame.getDatasetMenu());
+        
+        
+        JMenu menuTest = new JMenu("Test");
+        for (Action act:frame.testAction){
+            menuTest.add(act);
+        }
+        menuBar.add(menuTest);
+        
+        
         frame.setJMenuBar(menuBar);
         
         frame.pack();

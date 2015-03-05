@@ -74,13 +74,13 @@ public class Dataset extends ArrayList<Object[]>{
         return index<=0;
     }
     
-    public Object getValue(String columnName){
+    public Object getValue(String columnName) throws Exception{
         Object[] rowset = get(index);
         int n= getColumnIndex(columnName);
         return rowset[n];
     }
     
-    public Integer getInteger(String columnName){
+    public Integer getInteger(String columnName) throws Exception{
         Object value = getValue(columnName);
         if (value!=null){
             return Integer.parseInt((String)value);
@@ -106,13 +106,11 @@ public class Dataset extends ArrayList<Object[]>{
     }
 
 
-    public int getColumnIndex(String columnName){
-        for (int n:columns.keySet()){
-            if (columns.get(n)==columnName){
+    public int getColumnIndex(String columnName) throws Exception{
+        for (int n:columns.keySet())
+            if (columns.get(n).equals(columnName))
                 return n;
-            }
-        }
-        return -1;
+        throw new Exception(String.format("Поле \"%s\" в датасете \"%s\" не найдено",columnName,tableName));
     }
 
     public Integer addColumn(String columnName){
@@ -139,15 +137,24 @@ public class Dataset extends ArrayList<Object[]>{
         super.add(recordset);
         index = this.indexOf(recordset);
     }
-    
+
+    public boolean columnExists(String columnName){
+        for (int i:columns.keySet()){
+            if (columns.get(i).equals(columnName)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void addRecord(Attributes attr){
         String columnName ;
-        Integer columnIndex;
+//        Integer columnIndex;
         for (int i=0;i<attr.getLength();i++){
             columnName = attr.getQName(i);
-            columnIndex = getColumnIndex(columnName);
-            if (columnIndex<0)
-                columnIndex = addColumn(columnName);
+            if (!columnExists(columnName))
+//                columnIndex = getColumnIndex(columnName);
+//            else
+                addColumn(columnName);
         }
 
         Object[] record = new Object[columns.size()];
@@ -170,7 +177,7 @@ public class Dataset extends ArrayList<Object[]>{
         return false;
     }
 
-    int getColumnCount() {
+    public int getColumnCount() {
         return columns.size();
     }
     
@@ -186,16 +193,54 @@ public class Dataset extends ArrayList<Object[]>{
         return this.get(rowIndex);
     }
 
-    void append(Object[] values) {
+    /**
+     * Получить карту значение текущей записи <имя_поля> <значение>
+     * @return 
+     */
+    public Map<String,Object> getValue(){
+        Map<String,Object> result = new HashMap<>();
+        Object[] rowset = this.get(index);
+        for (int col:columns.keySet()){
+            result.put(columns.get(col),rowset[col]);
+        }
+        return result;
+    }    
+    
+    /**
+     *  Изменение текущей записи
+     */
+     
+    void update(Map<String, Object> values) throws Exception{
+        Object[] rowset = this.get(index);
+        for (int col:columns.keySet()){
+            rowset[col]=values.get(columns.get(col));
+        }
+    }
+    
+    /**
+     * Добавление новой записи
+     * @param values  Map<String,Object> values
+     * @throws Exception 
+     */
+    void append(Map<String,Object> values) throws Exception {
         Object[] rowset = new Object[getColumnCount()];
-        System.out.println("-->"+rowset);
-        for (int i=0;i<values.length;i++){
-            rowset[i]=values[i];
+        for (String columnName : values.keySet()){
+            rowset[getColumnIndex(columnName)]=values.get(columnName);
         }
         this.add(rowset);
         index = indexOf(rowset);
-        
-        
     }
+    
+//    void append(Object[] values) {
+//        Object[] rowset = new Object[getColumnCount()];
+//        for (int i=0;i<values.length;i++){
+//            rowset[i]=values[i];
+//        }
+//        this.add(rowset);
+//        index = indexOf(rowset);
+//        
+//        
+//    }
+
 }
 

@@ -29,6 +29,7 @@ class Cell{
         this.col=col;
         this.row=row;
     }
+    @Override
     public String toString(){
         return String.format("col %d row %d",col,row);
     }

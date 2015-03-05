@@ -16,14 +16,14 @@ import java.io.FileWriter;
  */
 
 public class XMLExport {
-    DataModule dm;
+    DataModule dm = DataModule.getInsatnce();
     StringBuilder xml;
 
-    public XMLExport(DataModule dataModule) {
-        this.dm = dataModule;
-    }
+//    public XMLExport(DataModule dataModule) {
+////        this.dm = dataModule;
+//    }
 
-    private void saveTable(String tableName) {
+    private void saveTable(String tableName) throws Exception {
         Dataset ds = dm.getTable(tableName);
         ds.first();
         xml.append(String.format("\t<table name=\"%s\">\n", tableName));
@@ -55,13 +55,13 @@ public class XMLExport {
         xml.append("\t</table>\n");
     }
 
-    public void execute() {
+    public void execute() throws Exception{
         xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n");
-        dm.open();
-        for (String tableName : dm.getTableNames()) {
-            saveTable(tableName);
-        }
+//        dm.open();
+            for (String tableName : dm.getTableNames()) {
+                saveTable(tableName);
+            }
         xml.append("</root>");
     }
     public void save(String fileName){
@@ -75,13 +75,12 @@ public class XMLExport {
         }
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         DataModule dm = DataModule.getInsatnce();
         dm.open();
-        XMLExport xmlExport = new XMLExport(dm);
+        XMLExport xmlExport = new XMLExport();
         xmlExport.execute();
         xmlExport.save("test31.xml");
-        
         System.out.println("ExportOK");
                 
     }

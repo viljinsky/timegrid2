@@ -6,12 +6,38 @@
 
 package ru.viljinsky;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author вадик
  */
 public class TestDS {
     static DataModule dm =DataModule.getInsatnce();
+    
+    
+    public static void fillCurriculum() throws Exception{
+        Map<String,Object> values = new HashMap<>();
+        
+        Dataset curriculum = dm.getTable("curriculum");
+        Dataset subject = dm.getTable("subject");
+        Dataset curriculum_item = dm.getTable("curriculum_item");
+        curriculum.first();
+        while (!curriculum.eof()){
+            subject.first();
+            while (!subject.eof()){
+                values.put("curriculum_id", curriculum.getValue("id"));
+                values.put("subject_id", subject.getValue("id"));
+                curriculum_item.append(values);
+//                curriculum_item.append(values);
+                subject.next();
+            }
+            curriculum.next();
+        }
+        
+    }
     
     public static void fillShift() throws Exception{
         Dataset shift = dm.getTable("shift");
@@ -20,6 +46,9 @@ public class TestDS {
         Dataset day_list = dm.getTable("day_list");
         
         shift.first();
+        shift.next();
+        
+        Map<String,Object> values = new HashMap<>();
         
         while (!lessons.eof()){
             
@@ -27,8 +56,14 @@ public class TestDS {
             while (!day_list.eof()){
                 lessons.first();
                 while (!lessons.eof()){
-//                    System.out.println(shift.getValue("id")+" "+day_list.getValue("id")+" "+lessons.getValue("id"));
-                    shift_item.append(new Object[]{shift.getValue("id"),day_list.getValue("id"),lessons.getValue("id")});
+//                    values = new HashMap<>();
+                    values.put("shift_id",shift.getValue("id"));
+                    values.put("day_id",day_list.getValue("id"));
+                    values.put("lesson_id",lessons.getValue("id"));
+                    
+                    shift_item.append(values);
+                    
+//                    shift_item.append(new Object[]{shift.getValue("id"),day_list.getValue("id"),lessons.getValue("id")});
                     lessons.next();
                 }
                 day_list.next();
@@ -43,8 +78,23 @@ public class TestDS {
         dm.open();
         try{
             TestDS.fillShift();
-            dm.save("t21.xml");
+            File f = new File("t211.xml");
+            f.deleteOnExit();
+            dm.save("t211.xml");
             System.out.println("OK");
+            
+            
+            Dataset dataset = dm.getTable("shift_item");
+            dataset.first();
+            while (!dataset.eof()){
+                for (String column:dataset.getColumns()){
+                    System.out.println(column+" = "+dataset.getValue(column));
+                }
+                dataset.next();
+                System.out.println();
+            }
+        
+            
         } catch (Exception e){
             e.printStackTrace();
         }

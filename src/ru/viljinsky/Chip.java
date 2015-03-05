@@ -42,7 +42,7 @@ public  class Chip extends CellElement{
                 room_no = (String) dm.lookUp("room", "id", room_id, "number");
                 group_title = (String) dm.lookUp("subject_group", "id", group_id , "subject_id");
                 String s = (String) dm.lookUp("subject", "id", subject_id, "color");
-                Integer nn = Integer.parseInt(s);
+                Integer nn = Integer.decode(s);
                 subjectColor = new Color(nn);
 //                System.out.println("Subject color '"+s+"'"+nn+" "+String.format("%h", nn));
 //                System.out.println(String.format("---> %d", 0xffaaff));

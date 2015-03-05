@@ -53,11 +53,11 @@
             <column name="name" type="string"></column>
             <column name="color" type="integer"></column>
         </columns>
-        <rec id="1" name="Русский яз"   color="16755455"></rec>
-        <rec id="2" name="Математика"   color="16755387"></rec>
-        <rec id="3" name="Физика"       color="16755387"></rec>
-        <rec id="4" name="Химия"        color="16755387"></rec>
-        <rec id="5" name="Литература"   color="16755387"></rec>        
+        <rec id="1" name="Русский яз"   color="0xFF00FF"></rec>
+        <rec id="2" name="Математика"   color="0xFF00FF"></rec>
+        <rec id="3" name="Физика"       color="0xFFFFFF"></rec>
+        <rec id="4" name="Химия"        color="0xFF00FF"></rec>
+        <rec id="5" name="Литература"   color="0xFFFFBB"></rec>        
     </table>
     
     
@@ -93,16 +93,17 @@
             <column name="skill_id"></column>
             <column name="label" type="integer"></column>
             <column name="shift_id" type="integer"></column>
+            <column name="curriculumn_id" type="integer"></column>
         </columns>
         <primary key="id"></primary>
         <lookup column="shift_id" references="shift.caption"></lookup>
-        <rec id="1" skill_id="8" label="А" shift_id="3"></rec>
-        <rec id="2" skill_id="8" label="Б" shift_id="3"></rec>
-        <rec id="3" skill_id="8" label="В" shift_id="3"></rec>
-        <rec id="4" skill_id="9" label="А" shift_id="3"></rec>
-        <rec id="5" skill_id="9" label="Б" shift_id="3"></rec>
-        <rec id="6" skill_id="10" label="А" shift_id="3"></rec>
-        <rec id="7" skill_id="10" label="Б" shift_id="3"></rec>
+        <rec id="1" skill_id="8" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="2" skill_id="8" label="Б" curriculum_id="1" shift_id="3"></rec>
+        <rec id="3" skill_id="8" label="В" curriculum_id="1" shift_id="3"></rec>
+        <rec id="4" skill_id="9" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="5" skill_id="9" label="Б" curriculum_id="1" shift_id="3"></rec>
+        <rec id="6" skill_id="10" label="А" curriculum_id="1" shift_id="3"></rec>
+        <rec id="7" skill_id="10" label="Б" curriculum_id="1" shift_id="3"></rec>
         <primary key="id"></primary>
         <foreigh key="skill_id" references="skill"></foreigh>
     </table>
@@ -122,9 +123,15 @@
         <rec id="3" depart_id="3" subject_id="3"></rec>
         <rec id="4" depart_id="4" subject_id="4"></rec>
     </table>
+    
     <table name="curriculum">
-        <rec skill_id="1" subject_id="1" hour_per_week="1"></rec>
+        <rec id="1" description="Учебный план 1"></rec>
     </table>
+    
+    <table name="curriculum_item" primary="curriculum_id;subject_id">
+        <rec curriculum_id="1" subject_id="1" hour_per_week="2" hour_per_day="1" group_type_id="1"></rec>
+    </table>
+    
     <table name="work_plan">
         <rec group_id="1" subject_id="1" teacher_id="1" room_id="1" hour_per_week="2"></rec>
         <rec group_id="2" subject_id="1" teacher_id="2" room_id="1" hour_per_week="2"></rec>

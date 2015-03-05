@@ -42,11 +42,11 @@
 		<column name="id" type="java.lang.String"></column>
 		<column name="name" type="java.lang.String"></column>
 		<column name="color" type="java.lang.String"></column>
-		<rec id="1" name="Русский яз" color="16755455" ></rec>
-		<rec id="2" name="Математика" color="16755387" ></rec>
-		<rec id="3" name="Физика" color="16755387" ></rec>
-		<rec id="4" name="Химия" color="16755387" ></rec>
-		<rec id="5" name="Литература" color="16755387" ></rec>
+		<rec id="1" name="Русский яз" color="0xFF00FF" ></rec>
+		<rec id="2" name="Математика" color="0xFF00FF" ></rec>
+		<rec id="3" name="Физика" color="0xFFFFFF" ></rec>
+		<rec id="4" name="Химия" color="0xFF00FF" ></rec>
+		<rec id="5" name="Литература" color="0xFFFFBB" ></rec>
 	</table>
 	<table name="shift_item">
 		<column name="shift_id" type="java.lang.String"></column>
@@ -57,6 +57,55 @@
 		<rec shift_id="1" lesson_id="2" day_id="1" ></rec>
 		<rec shift_id="1" lesson_id="3" day_id="1" ></rec>
 		<rec shift_id="1" lesson_id="4" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="1" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="2" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="3" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="4" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="5" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="6" day_id="7" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="1" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="2" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="3" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="4" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="5" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="6" ></rec>
+		<rec shift_id="2" lesson_id="7" day_id="7" ></rec>
 	</table>
 	<table name="schedule">
 		<column name="day_id" type="java.lang.String"></column>

@@ -35,6 +35,9 @@ class GridModel extends AbstractTableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        if (rowIndex<0){
+            System.out.println("XXXXXXXXX");
+        }
         Object[] recordset = dataset.getRowset(rowIndex);
         return recordset[columnIndex];
     }
@@ -51,8 +54,11 @@ class GridModel extends AbstractTableModel{
     }
 
     @Override
-    public String getColumnName(int column) {
-        return dataset.getColumnName(column);
+    public String getColumnName(int colIndex) {
+        if (colIndex<0){
+            System.out.println("XXXXXXXXX");
+        }
+        return dataset.getColumnName(colIndex);
     }
     
 }
@@ -60,9 +66,10 @@ class GridModel extends AbstractTableModel{
 class Grid extends JTable{
     DataModule dataModule = DataModule.getInsatnce();
     Dataset dataset;
-    public Grid(String tableName){
+    public Grid(Dataset dataset){
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        dataset = dataModule.getTable(tableName);
+        this.dataset = dataset;
+//        dataset = dataModule.getTable(tableName);
         GridModel model = new GridModel(dataset);
         setModel(model);
         
@@ -71,8 +78,8 @@ class Grid extends JTable{
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()){
-                    System.out.println(dataset.getTableName()+Grid.this.getSelectedRow());
-                    dataset.index=Grid.this.getSelectedRow();
+                    System.out.println(Grid.this.dataset.getTableName()+Grid.this.getSelectedRow());
+                    Grid.this.dataset.index=Grid.this.getSelectedRow();
                 }
             }
         });

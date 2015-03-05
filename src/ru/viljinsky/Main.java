@@ -11,6 +11,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,14 +24,23 @@ class TTimeGrid extends TimeGrid{
     public void load() {
         cells.clear();
         Chip chip;
+        try{
         Dataset ds = dm.getTable("schedule");
         ds.first();
         while (!ds.eof()){
-            chip = new ru.viljinsky.Chip(ds.getInteger("subject_id"),ds.getInteger("teacher_id"),
+            try{
+            chip = new Chip(ds.getInteger("subject_id"),ds.getInteger("teacher_id"),
                     ds.getInteger("room_id"),ds.getInteger("group_id"));
             chip.setCell(ds.getInteger("day_id"), ds.getInteger("lesson_id"));
             cells.add(chip);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             ds.next();
+        }
+        } catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
 
@@ -43,15 +53,15 @@ public class Main {
         DataModule dataModule = DataModule.getInsatnce();
         dataModule.open();
         
-        Dataset ds = dataModule.getTable("work_plan");
-        ds.first();
-        while (!ds.eof()){
-            for (String columnName:ds.getColumns()){
-                System.out.print(columnName +" = '"+ ds.getValue(columnName)+"'");
-            }
-            ds.next();
-            System.out.println();
-        }
+//        Dataset ds = dataModule.getTable("work_plan");
+//        ds.first();
+//        while (!ds.eof()){
+//            for (String columnName:ds.getColumns()){
+//                System.out.print(columnName +" = '"+ ds.getValue(columnName)+"'");
+//            }
+//            ds.next();
+//            System.out.println();
+//        }
         
         
         

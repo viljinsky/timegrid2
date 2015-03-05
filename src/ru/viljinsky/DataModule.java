@@ -38,17 +38,19 @@ public class DataModule {
         return instance;
     }
     
-    public Dataset getTable(String tableName){
+    public Dataset getTable(String tableName) throws Exception{
         for (Dataset dataset:tables){
             if (dataset.getTableName().equals(tableName)){
                 return dataset;
             }
         }
-        return null;
+        throw new Exception(String.format("Таблица \"%s\" не найдена",tableName));
     }
     
     public Dataset getTable(Integer index){
-        return tables.get(index);
+        if (index>=0)
+            return tables.get(index);
+        return null;
     }
     
     public String[] getTableNames(){
@@ -60,8 +62,8 @@ public class DataModule {
     }
 
     void close() {
-        tables.clear();
-        active=false;
+//        tables.clear();
+//        active=false;
     }
     
     class DataParser extends Parser{
@@ -99,7 +101,7 @@ public class DataModule {
             throw new Exception("Файл \""+path+"\"существует");
         }
         
-        XMLExport xmlExport = new XMLExport(instance);
+        XMLExport xmlExport = new XMLExport();
         xmlExport.execute();
         xmlExport.save(path);
     }
