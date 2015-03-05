@@ -72,6 +72,8 @@ public class DataManager extends JFrame{
         JFileChooser fc = new JFileChooser(dataFile);
         int retVal = fc.showOpenDialog(DataManager.this);
         if (retVal== JFileChooser.APPROVE_OPTION){
+            tabPanel.removeAll();
+            dataModule.close();
             dataFile = fc.getSelectedFile();
             dataModule.open(dataFile.getPath());
             dataPath=dataFile.getPath();
@@ -90,7 +92,13 @@ public class DataManager extends JFrame{
     public void save(){
         if (dataPath == null)
             saveAs();
-        dataModule.save(dataPath);
+        try{
+            dataModule.save(dataPath);
+        } catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            
+        }
     }
     
     public void saveAs(){
@@ -98,8 +106,13 @@ public class DataManager extends JFrame{
         int retVal = fc.showSaveDialog(DataManager.this);
         if (retVal==JFileChooser.APPROVE_OPTION){
             dataFile = fc.getSelectedFile();
-            dataModule.save(dataFile.getPath());
-            dataPath=dataFile.getPath();
+            try{
+                dataModule.save(dataFile.getPath());
+                dataPath=dataFile.getPath();
+            } catch (Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            }
         }
     }
     
@@ -147,10 +160,11 @@ public class DataManager extends JFrame{
         
         String command = (String)act.getValue(AbstractAction.ACTION_COMMAND_KEY);
         switch (command){
-            case "save":
-            case "saveAs":
-                act.setEnabled(dataPath!=null);
-                break;
+            
+//            case "save":
+//            case "saveAs":
+//                act.setEnabled(dataPath!=null);
+//                break;
                 
             case "append":
                 act.setEnabled(b);
@@ -174,6 +188,11 @@ public class DataManager extends JFrame{
                 break;
             case "open":
                 open();
+                break;
+            case "close":
+                tabPanel.removeAll();
+                remove(tabPanel);
+                dataModule.close();
                 break;
             case "save":
                 save();
@@ -217,7 +236,7 @@ public class DataManager extends JFrame{
         }
     }
     
-    Action[] dataAction = {new Act("new"),new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("exit")};
+    Action[] dataAction = {new Act("new"),new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("close"), new Act("exit")};
     Action[] datasetAction = {new Act("append"),new Act("edit"),new Act("delete"),new Act("refresh")};
     
     public JMenu getDataMenu(){
@@ -249,6 +268,7 @@ public class DataManager extends JFrame{
         
         frame.pack();
         frame.setVisible(true);
+        frame.opennew();
         
     }
     

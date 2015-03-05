@@ -27,9 +27,11 @@ public class XMLExport {
         Dataset ds = dm.getTable(tableName);
         ds.first();
         xml.append(String.format("\t<table name=\"%s\">\n", tableName));
+        
         for (String s : ds.getColumns()) {
             xml.append(String.format("\t\t<column name=\"%s\" type=\"%s\"></column>\n", s, "java.lang.String"));
         }
+        
         String[] primary = ds.getPrimary();
         if (primary.length > 0) {
             String primaryString = "";

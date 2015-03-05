@@ -7,6 +7,7 @@
 package ru.viljinsky;
 
 import java.awt.Color;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,6 +58,11 @@ public class DataModule {
         }
         return result.toArray(new String[tables.size()]);
     }
+
+    void close() {
+        tables.clear();
+        active=false;
+    }
     
     class DataParser extends Parser{
 
@@ -87,7 +93,12 @@ public class DataModule {
         }
     }
     
-    public void save(String path){
+    public void save(String path) throws Exception{
+        File file = new File(path);
+        if (file.exists()){
+            throw new Exception("Файл \""+path+"\"существует");
+        }
+        
         XMLExport xmlExport = new XMLExport(instance);
         xmlExport.execute();
         xmlExport.save(path);

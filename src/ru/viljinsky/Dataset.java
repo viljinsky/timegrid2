@@ -185,5 +185,17 @@ public class Dataset extends ArrayList<Object[]>{
     public Object[] getRowset(Integer rowIndex){
         return this.get(rowIndex);
     }
+
+    void append(Object[] values) {
+        Object[] rowset = new Object[getColumnCount()];
+        System.out.println("-->"+rowset);
+        for (int i=0;i<values.length;i++){
+            rowset[i]=values[i];
+        }
+        this.add(rowset);
+        index = indexOf(rowset);
+        
+        
+    }
 }
 
