@@ -7,8 +7,8 @@
 
 теги 
 
-*table
-*rec
-*primary
-*references
-*lookup
+* table
+* rec
+* primary
+* references
+* lookup
