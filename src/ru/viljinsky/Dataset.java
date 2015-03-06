@@ -22,6 +22,7 @@ public class Dataset extends ArrayList<Object[]>{
     String tableName ;
     Map<Integer,String> columns;
     Map<String,String> lookupMap;
+    Map<String,String> foreignMap;
     Set<String> primary;
     DataModule dm = DataModule.getInsatnce();
 
@@ -32,6 +33,7 @@ public class Dataset extends ArrayList<Object[]>{
         columns = new HashMap<>();
         lookupMap = new HashMap<>();
         primary = new HashSet<>();
+        foreignMap = new HashMap<>();
     }
 
     public String[] getPrimary(){
@@ -271,6 +273,75 @@ public class Dataset extends ArrayList<Object[]>{
         index = indexOf(rowset);
         return index;
     }
+ 
+    //-------------
     
+    public void open() throws Exception{
+        Dataset ds = dm.getTable(tableName);
+        this.clear();
+        this.addAll(ds);
+        this.columns=ds.columns;
+        this.primary=ds.primary;
+        this.lookupMap=ds.lookupMap;
+    }
+    
+    /**
+     * Открыть датасет с фильтом
+     * 
+     * @param map номер_поля-значение
+     * @throws Exception 
+     */
+    public void open(Map<Integer,Object> map) throws Exception{
+                
+        Dataset ds = dm.getTable(tableName);
+        this.columns=ds.columns;
+        this.primary=ds.primary;
+        this.lookupMap=ds.lookupMap;
+        
+        
+        this.clear();
+        boolean b;
+        for (Object[] rowset:ds){
+            
+            b=true;
+            for (int n:map.keySet()){
+                if (!rowset[n].equals(map.get(n))){
+                    b=false;
+                    break;
+                }
+            }
+            if (b)    
+                this.add(rowset);
+        }
+        
+    }
+    
+    public boolean isReferences(String tableName){
+        String references;
+        for (String key:foreignMap.keySet()){
+            references = foreignMap.get(key);
+            if (references.split("\\.")[0].equals(tableName))
+                return true;
+        }
+        return false;
+    }
+    
+    public String getReferences(String tableName)throws Exception{
+        String references;
+        for (String key:foreignMap.keySet()){
+            references = foreignMap.get(key);
+            if (!references.contains(".")){
+                throw new Exception("Неверный формат references ("+references+")");
+            }
+            if (references.split("\\.")[0].equals(tableName))
+             return key+"=" + references.split("\\.")[1];
+        }
+        return null;
+    }
+    
+    @Override
+    public String toString(){
+        return tableName+" ("+size()+")";
+    }
 }
 

@@ -37,13 +37,44 @@ public class DataModule {
         return instance;
     }
     
+    /**
+     * Получение корневой таблици по имени_таблицы
+     * @param tableName
+     * @return
+     * @throws Exception 
+     */
     public Dataset getTable(String tableName) throws Exception{
+        if (!active){
+            throw new Exception ("ERROR! DataModule not active") ;
+        }
         for (Dataset dataset:tables){
             if (dataset.getTableName().equals(tableName)){
                 return dataset;
             }
         }
         throw new Exception(String.format("Таблица \"%s\" не найдена",tableName));
+    }
+    
+    /**
+     * Получение списка подчинённых таблиц для таблицы с именем_тfблицы
+     * @param tableName
+     * @return сисок табли Dataset[]
+     */
+    public Dataset[] getRefTables(String tableName){
+//        Set<Dataset> list = new HashSet<>();
+        java.util.List<Dataset> list = new ArrayList<>();
+        Dataset refDataset;
+        for (Dataset ds : tables){
+            if (ds.isReferences(tableName)){
+                refDataset = new Dataset(ds.tableName);
+                refDataset.columns=ds.columns;
+                refDataset.primary=ds.primary;
+                refDataset.lookupMap=ds.lookupMap;
+                refDataset.foreignMap=ds.foreignMap;
+                list.add(refDataset);
+            }
+        }
+        return list.toArray(new Dataset[list.size()]);
     }
     
     public Dataset getTable(Integer index){

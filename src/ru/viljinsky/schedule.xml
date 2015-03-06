@@ -105,7 +105,7 @@
         <rec id="6" skill_id="3" label="А" curriculum_id="1" shift_id="3"></rec>
         <rec id="7" skill_id="3" label="Б" curriculum_id="1" shift_id="3"></rec>
         <primary key="id"></primary>
-        <foreigh key="skill_id" references="skill"></foreigh>
+        <foreign key="skill_id" references="skill"></foreign>
         
         <lookup column="skill_id" references="skill.caption"></lookup>
         <lookup column="curriculum_id" references="curriculum.description"></lookup>
@@ -133,6 +133,7 @@
     
     <table name="curriculum_item" primary="curriculum_id;subject_id">
         <rec curriculum_id="1" subject_id="1" hour_per_week="2" hour_per_day="1" group_type_id="1"></rec>
+        <foreign key="curriculum_id" references="curriculum.id"></foreign>
     </table>
     
     <table name="work_plan">
@@ -145,6 +146,7 @@
         <rec group_id="3" subject_id="3" teacher_id="3" room_id="4" hour_per_week="2"></rec>
         <rec group_id="4" subject_id="2" teacher_id="4" room_id="4" hour_per_week="2"></rec>
         <rec group_id="1" subject_id="1" teacher_id="1" room_id="4" hour_per_week="2"></rec>
+        <foreign key="group_id" references="subject_group.id"></foreign>
     </table>
     
     <table name="schedule">
@@ -157,6 +159,8 @@
         <rec day_id="2" lesson_id="3" group_id="3" subject_id="3" teacher_id="3" room_id="4"></rec>
         <rec day_id="3" lesson_id="4" group_id="4" subject_id="2" teacher_id="4" room_id="4"></rec>
         <rec day_id="3" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="4"></rec>
+        <foreign key="teacher_id" references="teacher.id"></foreign>
+        <foreign key="group_id" references="subject_group.id"></foreign>
     </table>
     
 </root>

@@ -71,8 +71,10 @@ public class Parser extends DefaultHandler{
             case "lookup":
                 dataset.lookupMap.put(attributes.getValue("column"), attributes.getValue("references"));
                 break;
-            case "foreigh":
-//                System.out.println("foreigh");
+                
+            case "foreign":
+                dataset.foreignMap.put(attributes.getValue("key"), attributes.getValue("references"));
+                System.out.println(dataset.tableName+" "+ dataset.foreignMap.toString());
                 break;
                 
             default:

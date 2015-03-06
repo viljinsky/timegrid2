@@ -48,19 +48,19 @@ public class TestDS {
         shift.next();
         
         Map<String,Object> values = new HashMap<>();
-        
+        lessons.first();
         while (!lessons.eof()){
             
             day_list.first();
             while (!day_list.eof()){
-                lessons.first();
-                while (!lessons.eof()){
+//                lessons.first();
+//                while (!lessons.eof()){
                     values.put("shift_id",shift.getValue("id"));
                     values.put("day_id",day_list.getValue("id"));
                     values.put("lesson_id",lessons.getValue("id"));
                     shift_item.append(values);
-                    lessons.next();
-                }
+//                    lessons.next();
+//                }
                 day_list.next();
             }
             lessons.next();

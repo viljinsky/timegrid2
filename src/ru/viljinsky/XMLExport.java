@@ -3,6 +3,7 @@ package ru.viljinsky;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.Map;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,9 +20,6 @@ public class XMLExport {
     DataModule dm = DataModule.getInsatnce();
     StringBuilder xml;
 
-//    public XMLExport(DataModule dataModule) {
-////        this.dm = dataModule;
-//    }
 
     private void saveTable(String tableName) throws Exception {
         Dataset ds = dm.getTable(tableName);
@@ -43,6 +41,14 @@ public class XMLExport {
             }
             xml.append(String.format("\t\t<primary key=\"%s\"></primary>\n", primaryString));
         }
+        
+        Map<String,String> lookup = ds.lookupMap;
+        if (!lookup.isEmpty()){
+            for (String s:lookup.keySet()){
+                xml.append(String.format("\t\t<lookup column=\"%s\" references =\"%s\"></lookup>\n",s,lookup.get(s)));
+            }
+        }
+                
         while (!ds.eof()) {
             xml.append("\t\t<rec ");
             for (String columnName : ds.getColumns()) {
