@@ -6,6 +6,8 @@
 
 package ru.viljinsky;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -16,11 +18,20 @@ import javax.swing.table.AbstractTableModel;
  * @author вадик
  */
 
+
 class GridModel extends AbstractTableModel{
     Dataset dataset;
+    Map<String,Map<Object,Object>> lookups;
     
     public GridModel(Dataset dataset){
         this.dataset=dataset;
+        lookups = new HashMap();
+        
+        for (String column:dataset.getColumns()){
+            if (dataset.isLookup(column)){
+                lookups.put(column,dataset.getLookup(column));
+            }
+        }
     }
     
     @Override
@@ -35,11 +46,13 @@ class GridModel extends AbstractTableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex<0){
-            System.out.println("XXXXXXXXX");
-        }
-        Object[] recordset = dataset.getRowset(rowIndex);
-        return recordset[columnIndex];
+         Object[] rowset = dataset.get(rowIndex);
+         String columnName = dataset.getColumnName(columnIndex);
+         if (lookups.containsKey(columnName)){
+             Map lu = lookups.get(columnName);
+             return lu.get(rowset[columnIndex]);
+         }        
+         return rowset[columnIndex];
     }
 
     @Override
@@ -49,15 +62,12 @@ class GridModel extends AbstractTableModel{
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-         Object[] rowset = dataset.get(rowIndex);
+        Object[] rowset = dataset.get(rowIndex);
          rowset[columnIndex]=aValue;
     }
 
     @Override
     public String getColumnName(int colIndex) {
-        if (colIndex<0){
-            System.out.println("XXXXXXXXX");
-        }
         return dataset.getColumnName(colIndex);
     }
     

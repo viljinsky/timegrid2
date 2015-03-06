@@ -21,15 +21,16 @@ import org.xml.sax.Attributes;
 public class Dataset extends ArrayList<Object[]>{
     String tableName ;
     Map<Integer,String> columns;
-    Map<String,String> lookup;
+    Map<String,String> lookupMap;
     Set<String> primary;
+    DataModule dm = DataModule.getInsatnce();
 
     protected Integer index=-1;
     
     public Dataset(String tableName){
         this.tableName=tableName;
         columns = new HashMap<>();
-        lookup = new HashMap<>();
+        lookupMap = new HashMap<>();
         primary = new HashSet<>();
     }
 
@@ -38,8 +39,47 @@ public class Dataset extends ArrayList<Object[]>{
     }
     
     
-    public String getLookup(String columnName){
-        return lookup.get(columnName);
+    public boolean isLookup(String columnName){
+        return lookupMap.get(columnName)!=null;
+    }
+    /**
+     * Получене списка ключ-значение  для лукап-поля
+     * @param columnName
+     * @return  null если поле не лукап
+     */
+    public Map<Object,Object> getLookup(String columnName){
+        String lookup;
+        String t1,t2,t3;
+        String[] f;
+        DataModule dm = DataModule.getInsatnce();
+        Dataset ds;
+        Map<Object,Object> map = new HashMap<>();
+        String[] primary;
+        
+        lookup=lookupMap.get(columnName);
+        if (lookup!=null){
+            f=lookup.split(";");
+            t1=f[0].split("\\.")[0];
+            t2=f[0].split("\\.")[1];
+            try{
+                ds=dm.getTable(t1);
+                primary = ds.getPrimary();
+                if (primary.length==0){
+                    System.err.println("Примари для \""+t1+"\" - не найден");
+                    return null;
+                }
+                t3 = ds.getPrimary()[0];
+                ds.first();
+                while (!ds.eof()){
+                    map.put(ds.getValue(t3), ds.getValue(t2));
+                    ds.next();
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            return map;
+        }
+        return null;
     }
 
     public String getTableName(){
@@ -222,13 +262,14 @@ public class Dataset extends ArrayList<Object[]>{
      * @param values  Map<String,Object> values
      * @throws Exception 
      */
-    void append(Map<String,Object> values) throws Exception {
+    public Integer append(Map<String,Object> values) throws Exception {
         Object[] rowset = new Object[getColumnCount()];
         for (String columnName : values.keySet()){
             rowset[getColumnIndex(columnName)]=values.get(columnName);
         }
         this.add(rowset);
         index = indexOf(rowset);
+        return index;
     }
     
 }

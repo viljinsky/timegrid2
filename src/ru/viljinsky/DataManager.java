@@ -9,6 +9,8 @@ package ru.viljinsky;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -73,6 +75,37 @@ public class DataManager extends JFrame{
                 }
             });
             
+            grid.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount()==2){
+                        edit();
+                    }
+                }
+
+            });
+            
+            grid.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    switch (e.getKeyCode()){
+                        case KeyEvent.VK_INSERT:
+                            append();
+                            break;
+                        case KeyEvent.VK_ENTER:
+                            edit();
+                            break;
+                        case KeyEvent.VK_DELETE:
+                            delete();
+                            break;
+                            
+                            
+                    }
+                }
+                
+            });
         }
         
         public void showPopup(MouseEvent e){
@@ -94,7 +127,8 @@ public class DataManager extends JFrame{
             if (dlg.getModalResult()==BaseDialog.RESULT_OK){
                 try{
                     values = dlg.getValues();
-                    dataset.append(values);
+                    int r = dataset.append(values);
+                    grid.getSelectionModel().setSelectionInterval(r, r);
                     grid.updateUI();
                     JOptionPane.showMessageDialog(rootPane, "OK");
                 } catch (Exception e){
@@ -115,7 +149,7 @@ public class DataManager extends JFrame{
                     values = dlg.getValues();
                     dataset.update(values);
                     grid.updateUI();
-                    JOptionPane.showMessageDialog(rootPane, "OK");
+//                    JOptionPane.showMessageDialog(rootPane, "OK");
                 } catch (Exception e){
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(rootPane, e.getMessage());
@@ -124,6 +158,16 @@ public class DataManager extends JFrame{
         }
         
         public void delete(){
+            if (JOptionPane.showConfirmDialog(rootPane, "Удалить запись", "Удаление", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+                if (dataset.delete()){
+                    int r = dataset.index;
+                    if (r>=0){
+                        grid.getSelectionModel().setSelectionInterval(r,r);
+                    }
+                    grid.updateUI();
+                }
+            
+            }
         }
         
         public void refresh(){
