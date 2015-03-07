@@ -25,109 +25,7 @@ import javax.swing.event.ListSelectionListener;
  * @author вадик
  */
 
-interface IMasterDetail {
-    public void onRecordsetOpen(Dataset dataset);
-    public void onRecordChange(Dataset dataset);
-}
 
-class GridPanel extends JPanel implements IMasterDetail{
-    DataModule dataModule = DataModule.getInsatnce();
-    String tableName;
-    Grid grid;
-    
-    Map<String,Integer> refMap;
-    Dataset refDataset;
-    
-    List<IMasterDetail> listeners = new ArrayList<>();
-    
-    public GridPanel(String tableName){
-       super(new BorderLayout());
-       this.tableName=tableName;
-       grid =new Grid();
-       add(new JScrollPane(grid));
-       grid.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-           @Override
-           public void valueChanged(ListSelectionEvent e) {
-               if (!e.getValueIsAdjusting())
-                   recordChange();
-           }
-       });
-       
-    }
-    
-   public void open() throws Exception{
-       grid.setDataset(dataModule.getTable(tableName));
-       for (IMasterDetail listener:listeners){
-           listener.onRecordsetOpen(grid.dataset);
-       }
-       
-   } 
-   
-   public void recordChange(){
-       grid.dataset.setIndex(grid.getSelectedRow());
-       for (IMasterDetail ig:listeners){
-           ig.onRecordChange(grid.dataset);
-       }
-   } 
-   public void addGridPanelListener(IMasterDetail listener){
-       listeners.add(listener);
-   } 
-    
-    public void setDataset(Dataset dataset){
-        grid.setDataset(dataset);
-    }
-    
-    public Dataset getDataset(){
-        return grid.dataset;
-    }
-
-    public String getTableName(){
-        return grid.dataset.getTableName();
-    }
-    
-    public void setMaster(GridPanel master){
-        master.addGridPanelListener(this);
-    }
-    
-    @Override
-    public void onRecordsetOpen(Dataset dataset) {
-        String references;
-        
-        try{
-            for (Dataset ds:dataset.getRefTables()){
-                if (ds.tableName.equals(tableName)){
-                    references = ds.getReferences(dataset.tableName);
-                    refDataset = ds;
-                    refMap = new HashMap<>();
-                    refMap.put(references.split("=")[1], ds.getColumnIndex(references.split("=")[0]));
-                    break;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    
-    @Override
-    public void onRecordChange(Dataset dataset) {
-        Map<Integer,Object> m2 = new HashMap<>();
-
-        try{
-        
-            for (String s:refMap.keySet()){
-                m2.put(refMap.get(s),dataset.getValue(s));
-            }
-            refDataset.open(m2);
-            grid.setDataset(refDataset);
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        
-    }
-    
-}
 
 public class TestTeacher2  extends JFrame{
     DataModule dataModule=DataModule.getInsatnce();
@@ -142,6 +40,7 @@ public class TestTeacher2  extends JFrame{
         getContentPane().setPreferredSize(new Dimension(800,600));
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         panelMaster = new GridPanel("teacher");
+//        panelMaster = new GridPanel();
         slave1 = new GridPanel("schedule");
         slave1.setMaster(panelMaster);
         

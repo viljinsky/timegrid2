@@ -161,8 +161,12 @@
         <rec day_id="3" lesson_id="4" group_id="4" subject_id="2" teacher_id="4" room_id="4"></rec>
         <rec day_id="3" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="4"></rec>
         <foreign key="teacher_id" references="teacher.id"></foreign>
+        <foreign key="room_id" references="room.id"></foreign>
         <foreign key="group_id" references="subject_group.id"></foreign>
         <lookup column="subject_id" references="subject.name"></lookup>
+        
+        <lookup column="day_id" references="day_list.caption"></lookup>
+        <lookup column="lesson_id" references="lesson.time_begin"></lookup>
     </table>
     
 </root>

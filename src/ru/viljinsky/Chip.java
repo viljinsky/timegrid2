@@ -54,11 +54,6 @@ public  class Chip extends CellElement{
         @Override
         public void draw(Graphics g,Rectangle b) {
             super.draw(g,b);
-//            String subject_name = dm.getSubjectName(subject_id);
-//            String teacher_name = dm.getTeacherName(teacher_id);
-//            String room_no = dm.getRoomNo(room_id);
-//            String group_title = dm.getGroupTitle(group_id);
-            
 
             Image image = new BufferedImage(b.width-1, b.height-1, BufferedImage.TYPE_INT_RGB);
             Graphics g1 = image.getGraphics();

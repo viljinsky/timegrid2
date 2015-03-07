@@ -78,6 +78,7 @@ class Grid extends JTable{
     Dataset dataset = null;
 
     public Grid() {
+//        super(1,1);
     }
     
     public Grid(Dataset dataset){
