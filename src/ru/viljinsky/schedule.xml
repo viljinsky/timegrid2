@@ -152,8 +152,8 @@
     
     <table name="schedule">
         <rec day_id="1" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="1"></rec>
-        <rec day_id="1" lesson_id="2" group_id="2" subject_id="1" teacher_id="2" room_id="1"></rec>
-        <rec day_id="1" lesson_id="3" group_id="3" subject_id="2" teacher_id="3" room_id="2"></rec>
+        <rec day_id="1" lesson_id="2" group_id="2" subject_id="1" teacher_id="1" room_id="1"></rec>
+        <rec day_id="1" lesson_id="3" group_id="3" subject_id="2" teacher_id="1" room_id="2"></rec>
         <rec day_id="1" lesson_id="4" group_id="4" subject_id="2" teacher_id="4" room_id="2"></rec>
         <rec day_id="2" lesson_id="1" group_id="1" subject_id="3" teacher_id="1" room_id="3"></rec>
         <rec day_id="2" lesson_id="2" group_id="2" subject_id="4" teacher_id="2" room_id="3"></rec>

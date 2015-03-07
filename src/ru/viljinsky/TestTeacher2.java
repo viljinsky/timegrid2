@@ -25,15 +25,20 @@ import javax.swing.event.ListSelectionListener;
  * @author вадик
  */
 
-interface IGridPanel {
+interface IMasterDetail {
+    public void onRecordsetOpen(Dataset dataset);
     public void onRecordChange(Dataset dataset);
 }
 
-class GridPanel extends JPanel implements IGridPanel{
+class GridPanel extends JPanel implements IMasterDetail{
     DataModule dataModule = DataModule.getInsatnce();
     String tableName;
     Grid grid;
-    List<IGridPanel> listeners = new ArrayList<>();
+    
+    Map<String,Integer> refMap;
+    Dataset refDataset;
+    
+    List<IMasterDetail> listeners = new ArrayList<>();
     
     public GridPanel(String tableName){
        super(new BorderLayout());
@@ -53,15 +58,19 @@ class GridPanel extends JPanel implements IGridPanel{
     
    public void open() throws Exception{
        grid.setDataset(dataModule.getTable(tableName));
+       for (IMasterDetail listener:listeners){
+           listener.onRecordsetOpen(grid.dataset);
+       }
+       
    } 
    
    public void recordChange(){
        grid.dataset.setIndex(grid.getSelectedRow());
-       for (IGridPanel ig:listeners){
+       for (IMasterDetail ig:listeners){
            ig.onRecordChange(grid.dataset);
        }
    } 
-   public void addGridPanelListener(IGridPanel listener){
+   public void addGridPanelListener(IMasterDetail listener){
        listeners.add(listener);
    } 
     
@@ -82,32 +91,36 @@ class GridPanel extends JPanel implements IGridPanel{
     }
     
     @Override
-    public void onRecordChange(Dataset dataset) {
-        System.out.println("filter "+dataset.getIndex());
-        try{
-        Map<String,Integer> m1 = new HashMap<>();
-        Map<Integer,Object> m2 = new HashMap<>();
+    public void onRecordsetOpen(Dataset dataset) {
         String references;
         
-        Dataset[] refDataset = dataset.getRefTables();
-        for (Dataset ds:refDataset){
-            if (ds.tableName.equals(tableName)){
-//                    System.out.println("---->"+ds.tableName);
-            
+        try{
+            for (Dataset ds:dataset.getRefTables()){
+                if (ds.tableName.equals(tableName)){
                     references = ds.getReferences(dataset.tableName);
-//                    System.out.println(references);
-                    m1.put(references.split("=")[1], ds.getColumnIndex(references.split("=")[0]));
-//                    System.out.println(m1);
-
-                    for (String s:m1.keySet()){
-                        m2.put(m1.get(s),dataset.getValue(s));
-                    }
-
-//                    System.out.println(m2);
-                    ds.open(m2);
-                    grid.setDataset(ds);
+                    refDataset = ds;
+                    refMap = new HashMap<>();
+                    refMap.put(references.split("=")[1], ds.getColumnIndex(references.split("=")[0]));
+                    break;
                 }
             }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void onRecordChange(Dataset dataset) {
+        Map<Integer,Object> m2 = new HashMap<>();
+
+        try{
+        
+            for (String s:refMap.keySet()){
+                m2.put(refMap.get(s),dataset.getValue(s));
+            }
+            refDataset.open(m2);
+            grid.setDataset(refDataset);
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -119,7 +132,8 @@ class GridPanel extends JPanel implements IGridPanel{
 public class TestTeacher2  extends JFrame{
     DataModule dataModule=DataModule.getInsatnce();
     GridPanel panelMaster;
-    GridPanel panelSlave;
+    GridPanel slave1;
+    GridPanel slave2;
     
             
     public TestTeacher2(){
@@ -128,11 +142,19 @@ public class TestTeacher2  extends JFrame{
         getContentPane().setPreferredSize(new Dimension(800,600));
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         panelMaster = new GridPanel("teacher");
-        panelSlave = new GridPanel("schedule");
-        panelSlave.setMaster(panelMaster);
+        slave1 = new GridPanel("schedule");
+        slave1.setMaster(panelMaster);
         
-        splitPane.setTopComponent(new JScrollPane(panelMaster));
-        splitPane.setBottomComponent(new JScrollPane(panelSlave));
+        slave2 = new GridPanel("work_plan");
+        slave2.setMaster(panelMaster);
+        
+        JSplitPane p1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        p1.setLeftComponent(slave1);
+        p1.setRightComponent(slave2);
+        p1.setResizeWeight(0.5);
+        
+        splitPane.setTopComponent(panelMaster);
+        splitPane.setBottomComponent(p1);//(new JScrollPane(slave1));
         getContentPane().add(splitPane);
         splitPane.setResizeWeight(.5);
         
