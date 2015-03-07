@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.xml.sax.Attributes;
@@ -339,9 +340,34 @@ public class Dataset extends ArrayList<Object[]>{
         return null;
     }
     
+    public Dataset[] getRefTables(){
+        List<Dataset> list = new ArrayList<>();
+        Dataset refDataset;
+        for (Dataset ds : dm.tables){
+            if (ds.isReferences(tableName)){
+                refDataset = new Dataset(ds.tableName);
+                refDataset.columns=ds.columns;
+                refDataset.primary=ds.primary;
+                refDataset.lookupMap=ds.lookupMap;
+                refDataset.foreignMap=ds.foreignMap;
+                list.add(refDataset);
+            }
+        }
+        return list.toArray(new Dataset[list.size()]);
+    }
+    
     @Override
     public String toString(){
         return tableName+" ("+size()+")";
     }
+
+    void setIndex(Integer index) {
+        this.index= index;
+    }
+
+    Integer getIndex() {
+        return index;
+    }
+    
 }
 

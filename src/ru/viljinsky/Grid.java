@@ -75,13 +75,15 @@ class GridModel extends AbstractTableModel{
 
 class Grid extends JTable{
     DataModule dataModule = DataModule.getInsatnce();
-    Dataset dataset;
+    Dataset dataset = null;
+
+    public Grid() {
+    }
+    
     public Grid(Dataset dataset){
+        this.dataset=dataset;
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        this.dataset = dataset;
-//        dataset = dataModule.getTable(tableName);
-        GridModel model = new GridModel(dataset);
-        setModel(model);
+        setDataset(dataset);
         
         getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
@@ -94,5 +96,16 @@ class Grid extends JTable{
             }
         });
     }
+    
+    public void setDataset(Dataset dataset){
+        this.dataset = dataset;
+        GridModel model = new GridModel(dataset);
+        setModel(model);
+    }
+    
+    public Dataset getDataset(){
+        return dataset;
+    }
+    
 }
 

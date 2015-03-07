@@ -147,6 +147,7 @@
         <rec group_id="4" subject_id="2" teacher_id="4" room_id="4" hour_per_week="2"></rec>
         <rec group_id="1" subject_id="1" teacher_id="1" room_id="4" hour_per_week="2"></rec>
         <foreign key="group_id" references="subject_group.id"></foreign>
+        <foreign key="teacher_id" references="teacher.id"></foreign>
     </table>
     
     <table name="schedule">
@@ -161,6 +162,7 @@
         <rec day_id="3" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="4"></rec>
         <foreign key="teacher_id" references="teacher.id"></foreign>
         <foreign key="group_id" references="subject_group.id"></foreign>
+        <lookup column="subject_id" references="subject.name"></lookup>
     </table>
     
 </root>
