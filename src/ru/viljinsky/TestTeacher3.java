@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -70,6 +69,6 @@ public class TestTeacher3 extends JFrame{
         frame.setContentPane(panel);
         frame.pack();
         frame.setVisible(true);
-        panel.open("teacher");
+        panel.open("profile");
     }
 }

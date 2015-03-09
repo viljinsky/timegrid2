@@ -30,11 +30,11 @@ interface IMasterDetail {
 
 class GridPanel extends JPanel implements IMasterDetail {
     DataModule dataModule = DataModule.getInsatnce();
-    String tableName;
+    private String tableName;
+    private String refTableName;
     Grid grid = new Grid();
     
     Map<String, Integer> refMap;
-    Dataset refDataset;
     List<IMasterDetail> listeners = new ArrayList<>();
 
     public GridPanel() {
@@ -127,7 +127,7 @@ class GridPanel extends JPanel implements IMasterDetail {
             for (Dataset ds : dataset.getRefTables()) {
                 if (ds.tableName.equals(tableName)) {
                     references = ds.getReferences(dataset.tableName);
-                    refDataset = ds;
+                    refTableName = ds.tableName;
                     refMap = new HashMap<>();
                     refMap.put(references.split("=")[1], ds.getColumnIndex(references.split("=")[0]));
                     break;
@@ -142,11 +142,13 @@ class GridPanel extends JPanel implements IMasterDetail {
     public void onRecordChange(Dataset dataset) {
         Map<Integer, Object> m2 = new HashMap<>();
         try {
-            for (String s : refMap.keySet()) {
+            
+            for (String s : refMap.keySet()) 
                 m2.put(refMap.get(s), dataset.getValue(s));
-            }
-            refDataset.open(m2);
-            grid.setDataset(refDataset);
+            
+            Dataset d = dataModule.getTable(refTableName,m2);
+            grid.setDataset(d);
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -97,7 +97,7 @@ class Grid extends JTable{
             }
         });
     }
-    
+
     public void setDataset(Dataset dataset){
         this.dataset = dataset;
         GridModel model = new GridModel(dataset);

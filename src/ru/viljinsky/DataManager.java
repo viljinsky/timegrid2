@@ -142,7 +142,7 @@ public class DataManager extends JFrame{
             Map<String,Object> values;
             DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
             dlg.setDataset(dataset);
-            dlg.setValues(dataset.getValue());
+            dlg.setValues(dataset.getValues());
             dlg.setVisible(true);
             if (dlg.getModalResult()==BaseDialog.RESULT_OK){
                 try{

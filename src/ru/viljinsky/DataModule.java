@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -44,17 +45,42 @@ public class DataModule {
      * @throws Exception 
      */
     public Dataset getTable(String tableName) throws Exception{
-        if (!active){
+        if (!active)
             throw new Exception ("ERROR! DataModule not active") ;
-        }
-        for (Dataset dataset:tables){
+        
+        for (Dataset dataset:tables)
             if (dataset.getTableName().equals(tableName)){
                 return dataset;
             }
-        }
+        
         throw new Exception(String.format("Таблица \"%s\" не найдена",tableName));
     }
-    
+    /**
+     * Получение отцильтрованной таблицы по имени_таблицы
+     * @param tableName
+     * @param filter Map<Integer,Object>
+     * @return
+     * @throws Exception 
+     */
+    public Dataset getTable(String tableName,Map<Integer,Object> filter) throws Exception{   
+        Dataset result = new Dataset(tableName);
+        Dataset dataset = getTable(tableName);
+        result.columns=dataset.columns;
+        result.primary= dataset.primary;
+        result.foreignMap = dataset.foreignMap;
+        result.lookupMap = dataset.lookupMap;
+        Object[] rowset ;
+        l1:for (int i=0;i<dataset.size();i++){
+            rowset = dataset.get(i);
+            boolean b ;
+            for (int col:filter.keySet()){
+                b = (rowset[col].equals(filter.get(col)));
+                if (!b) continue l1;
+            }
+            result.add(rowset);
+        }
+        return result;
+    }
     /**
      * Получение списка подчинённых таблиц для таблицы с именем_тfблицы
      * @param tableName
@@ -83,6 +109,26 @@ public class DataModule {
         return null;
     }
     
+    /**
+     * Количество открытых датасетов
+     * @return 
+     */
+    public Integer getTableCount(){
+        return tables.size();
+    }
+    
+    /**
+     * Список коренвых датасетов
+     * @return 
+     */
+    public Dataset[] getTables(){
+        return tables.toArray(new Dataset[tables.size()]);
+    }
+    
+    /**
+     * Список имён корневых датасетов
+     * @return 
+     */
     public String[] getTableNames(){
         Set<String> result = new HashSet<>();
         for (Dataset dataset:tables){

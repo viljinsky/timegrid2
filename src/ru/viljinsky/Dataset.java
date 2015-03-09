@@ -20,32 +20,17 @@ import org.xml.sax.Attributes;
  * @author вадик
  */
 
-interface IDataset{
-    public void append();
-    public void update();
-    public void delete();
-    public void insert();
-    public void first();
-    public void next();
-    public void prior();
-    public void last();
-    public boolean bof();
-    public boolean eof();
-    public void open();
-    public void close();
-}
-
 abstract class AbstractDataset extends ArrayList<Object[]>{
-    
+    DataModule dm = DataModule.getInsatnce();
 }
 
-public class Dataset extends ArrayList<Object[]>{
+public class Dataset extends AbstractDataset{
     String tableName ;
+    
+    Set<String> primary;
     Map<Integer,String> columns;
     Map<String,String> lookupMap;
     Map<String,String> foreignMap;
-    Set<String> primary;
-    DataModule dm = DataModule.getInsatnce();
 
     protected Integer index=-1;
     
@@ -210,7 +195,7 @@ public class Dataset extends ArrayList<Object[]>{
      * Получить карту значение текущей записи <имя_поля> <значение>
      * @return 
      */
-    public Map<String,Object> getValue(){
+    public Map<String,Object> getValues(){
         Map<String,Object> result = new HashMap<>();
         Object[] rowset = this.get(index);
         for (int col:columns.keySet()){
@@ -220,6 +205,7 @@ public class Dataset extends ArrayList<Object[]>{
     }    
     
     
+    @Deprecated
     public void open() throws Exception{
         Dataset ds = dm.getTable(tableName);
         this.clear();
@@ -266,7 +252,7 @@ public class Dataset extends ArrayList<Object[]>{
      *  Изменение текущей записи
      */
      
-    void update(Map<String, Object> values) throws Exception{
+    public void update(Map<String, Object> values) throws Exception{
         Object[] rowset = this.get(index);
         for (int col:columns.keySet()){
             rowset[col]=values.get(columns.get(col));
@@ -351,7 +337,13 @@ public class Dataset extends ArrayList<Object[]>{
 
     
     //--------------------- R E F E R E N C E S --------------------------------
-    
+
+    public boolean hasReferences(){
+        for (Dataset dataset:dm.tables)
+            if (dataset.isReferences(tableName))
+                return true;
+        return false;
+    }
     /**
      * Порверка явлиется ли талица ссылкой для tableName
      * @param tableName
@@ -393,7 +385,7 @@ public class Dataset extends ArrayList<Object[]>{
     public Dataset[] getRefTables(){
         List<Dataset> list = new ArrayList<>();
         Dataset refDataset;
-        for (Dataset ds : dm.tables){
+        for (Dataset ds : dm.getTables()){
             if (ds.isReferences(tableName)){
                 refDataset = new Dataset(ds.tableName);
                 refDataset.columns=ds.columns;
