@@ -12,6 +12,8 @@ package ru.viljinsky;
  */
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
@@ -55,6 +57,18 @@ public class Parser extends DefaultHandler{
                 break;
             case "rec":
                 dataset.addRecord(attributes);
+                /*
+                // !! Заменить
+                Map<String,Object> map = new HashMap<>();
+                for (int i=0;i<attributes.getLength();i++){
+                    map.put(attributes.getQName(i),attributes.getValue(i));
+                }
+                try{
+                    dataset.append(map);
+                } catch (Exception e){
+                    System.err.println(e.getMessage());
+                }
+                */
                 break;
                 
             case "column":
