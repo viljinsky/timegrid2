@@ -147,7 +147,7 @@ public class DataManager extends JFrame{
             if (dlg.getModalResult()==BaseDialog.RESULT_OK){
                 try{
                     values = dlg.getValues();
-                    dataset.update(values);
+                    dataset.edit(values);
                     grid.updateUI();
 //                    JOptionPane.showMessageDialog(rootPane, "OK");
                 } catch (Exception e){
@@ -159,12 +159,15 @@ public class DataManager extends JFrame{
         
         public void delete(){
             if (JOptionPane.showConfirmDialog(rootPane, "Удалить запись", "Удаление", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+                try{
                 if (dataset.delete()){
                     int r = dataset.index;
                     if (r>=0){
                         grid.getSelectionModel().setSelectionInterval(r,r);
                     }
                     grid.updateUI();
+                }} catch (Exception e){
+                    e.printStackTrace();
                 }
             
             }

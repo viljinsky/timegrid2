@@ -9,23 +9,15 @@ package ru.viljinsky.test;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -33,7 +25,6 @@ import javax.swing.table.AbstractTableModel;
 
 import ru.viljinsky.DataModule;
 import ru.viljinsky.Dataset;
-import ru.viljinsky.dialogs.DatasetEntryDialog;
 
 /**
  *
@@ -162,21 +153,22 @@ class GridPanel extends JPanel{
     
     public void onRecordChange(){
         int row = grid.getSelectedRow();
-        Dataset dataset = grid.getDataset();
-        dataset.setIndex(row);
-        Map<String,Object> keys= new HashMap<>();
-        try{
-            for (String s:dataset.getPrimary()){
-                keys.put(s, dataset.getValue(s));
+        if (row>=0){
+            Dataset dataset = grid.getDataset();
+            dataset.setIndex(row);
+            Map<String,Object> keys= new HashMap<>();
+            try{
+                for (String s:dataset.getPrimary()){
+                    keys.put(s, dataset.getValue(s));
+                }
+                System.out.println(keys);
+                for (Grid g:refGrids){
+                    g.open(keys);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
-            System.out.println(keys);
-            for (Grid g:refGrids){
-                g.open(keys);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
         }
-        
     }
     
     public void setDataset(Dataset dataset){

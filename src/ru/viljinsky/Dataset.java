@@ -20,8 +20,17 @@ import org.xml.sax.Attributes;
  * @author вадик
  */
 
+class DatasetException extends Exception{
+};
+        
 abstract class AbstractDataset extends ArrayList<Object[]>{
+    public static final String ERR_NO_RECORD_SELECTED="Ошибка: Нет активной записи (index<0)";
     DataModule dm = DataModule.getInsatnce();
+    
+    public abstract Integer append(Map<String,Object> map) throws Exception;
+    public abstract Integer insert(Map<String,Object> map) throws Exception;
+    public abstract void edit(Map<String,Object> map) throws Exception;
+    public abstract boolean delete() throws Exception;
 }
 
 public class Dataset extends AbstractDataset{
@@ -248,15 +257,44 @@ public class Dataset extends AbstractDataset{
     
     //--------------------- E D I T I N G -------------------------------------- 
     
+    public boolean checkPrimary(Object[] rowset) throws Exception{
+        Map<Integer,Object> keys = new HashMap<>();
+        for (String s:getPrimary()){
+            keys.put(getColumnIndex(s), rowset[getColumnIndex(s)]);
+        }
+        for (Object r:this){
+            for (int k:keys.keySet()){
+                if (rowset[k].equals(keys.get(k))){
+                    throw new Exception("Нарушение примари_кей");
+                }
+            }
+        }
+        return true;
+    }
+    
      /**
      *  Изменение текущей записи
      */
      
-    public void update(Map<String, Object> values) throws Exception{
+    @Override
+    public void edit(Map<String, Object> values) throws Exception{
         Object[] rowset = this.get(index);
         for (int col:columns.keySet()){
             rowset[col]=values.get(columns.get(col));
         }
+    }
+    
+    @Override
+    public Integer insert(Map<String,Object> values) throws Exception{
+        if (index<0){
+            throw new Exception(ERR_NO_RECORD_SELECTED);
+        }
+        Object[] rowset = new Object[getColumnCount()];
+        for (String key:values.keySet()){
+            rowset[getColumnIndex(key)]=values.get(key);
+        }
+        add(index, rowset);
+        return index;
     }
     
     /**
@@ -264,6 +302,7 @@ public class Dataset extends AbstractDataset{
      * @param values  Map<String,Object> values
      * @throws Exception 
      */
+    @Override
     public Integer append(Map<String,Object> values) throws Exception {
         Object[] rowset = new Object[getColumnCount()];
         for (String columnName : values.keySet()){
@@ -273,21 +312,21 @@ public class Dataset extends AbstractDataset{
         index = indexOf(rowset);
         return index;
     }
-    
+
+
     /**
      * Удаление текущей записи
      * @return 
      */
-    public boolean delete(){
-        if (index>=0){
-            Object[] recordset = get(index);
-            this.remove(recordset);
-            if (index>=this.size()){
-                index=this.size()-1;
-            }
-            return true;
-        }
-        return false;
+    @Override
+    public boolean delete() throws Exception{
+        if (index<0)
+            throw new Exception(ERR_NO_RECORD_SELECTED);
+        Object[] recordset = get(index);
+        this.remove(recordset);
+        if (index>=this.size())
+            index=this.size()-1;
+        return true;
     }
 
     //--------------------- L O O K U P ----------------------------------------

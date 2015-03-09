@@ -31,16 +31,26 @@ public class BaseDialog extends JDialog {
     public int modalResult = RESULT_NONE;
     
     public BaseDialog(JComponent owner){
-        prepare();
         int x,y;
-        Point d = owner.getLocationOnScreen();
-        Dimension z = owner.getSize();
-//        Dimension s = getSize();
-        x=d.x+(z.width-getWidth())/2;
-        y=d.y+(z.height-getHeight())/2;
-                
-        setLocation(x, y);
-        
+        Dimension z;
+        Point d;
+        prepare();
+        if (owner!=null){
+            d = owner.getLocationOnScreen();
+            z = owner.getSize();
+            x=d.x+(z.width-getWidth())/2;
+            y=d.y+(z.height-getHeight())/2;
+
+            setLocation(x, y);
+        } else {
+           
+            z = getToolkit().getScreenSize();
+            x=(z.width-getWidth())/2;
+            y=(z.height-getHeight())/2;
+
+            setLocation(x, y);
+            
+        }
     }
     
     public BaseDialog(){

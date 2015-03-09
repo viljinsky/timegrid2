@@ -7,10 +7,13 @@
 package ru.viljinsky.test;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -32,6 +35,7 @@ interface IDefaultGrid{
 
 
 class DefaultGrid extends JTable implements IDefaultGrid {
+    JComponent rootPane = null;
     GridModel model = null;
     Act[] actions = {new Act("append"), new Act("edit"), new Act("delete"), new Act("insert")};
 
@@ -64,6 +68,28 @@ class DefaultGrid extends JTable implements IDefaultGrid {
                     }
                 }
             }
+        });
+        
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch(e.getKeyCode()) {
+                    case KeyEvent.VK_INSERT:
+                        insert();
+                        break;
+                    case KeyEvent.VK_DELETE:
+                        delete();
+                        break;
+                    case KeyEvent.VK_CONTEXT_MENU:
+                        context();
+                        break;
+                    case KeyEvent.VK_ENTER:
+                        edit();
+                        break;
+                }
+            }
+            
         });
         
         addMouseListener(new MouseAdapter() {
@@ -114,45 +140,79 @@ class DefaultGrid extends JTable implements IDefaultGrid {
         }
     }
 
+    public void context(){
+        JPopupMenu popup = new JPopupMenu();
+        for (Action a:actions){
+            popup.add(a);
+        }
+        popup.show(this, 0,0);
+        
+    }
+    
     @Override
     public void append() {
-        DatasetEntryDialog dlg = new DatasetEntryDialog(this);
+        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
         dlg.setDataset(model.dataset);
         dlg.setVisible(true);
         if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
             try{
                 model.dataset.append(dlg.getValues());
                 model.fireTableDataChanged();
+                int row = model.dataset.getIndex();
+                getSelectionModel().setSelectionInterval(row, row);
             } catch (Exception e){
-                JOptionPane.showMessageDialog(this, "OK");
+                JOptionPane.showMessageDialog(rootPane,e.getMessage());
             }
         }
     }
 
     @Override
     public void delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (JOptionPane.showConfirmDialog(rootPane, "Удалить запись","Внимание",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+            try{
+                model.dataset.delete();
+                model.fireTableDataChanged();
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(rootPane, e.getMessage());
+            }
+        }
     }
 
     @Override
     public void edit() {
-        DatasetEntryDialog dlg = new DatasetEntryDialog(this);
+        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
         dlg.setDataset(model.dataset);
         dlg.setValues(model.dataset.getValues());
         dlg.setVisible(true);
         if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
             try{
-                model.dataset.update(dlg.getValues());
+                model.dataset.edit(dlg.getValues());
                 model.fireTableDataChanged();
+                int row = model.dataset.getIndex();
+                getSelectionModel().setSelectionInterval(row,row);
             } catch (Exception e){
-                JOptionPane.showMessageDialog(this, e.getMessage());
+                JOptionPane.showMessageDialog(rootPane, e.getMessage());
             }
         }
     }
 
     @Override
     public void insert() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
+        dlg.setDataset(model.dataset);
+        dlg.setVisible(true);
+        if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
+            try{
+                model.dataset.insert(dlg.getValues());
+                model.fireTableDataChanged();
+                int row = model.dataset.getIndex();
+                getSelectionModel().setSelectionInterval(row, row);
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(rootPane, "OK");
+            }
+        }
+        
+        
     }
     
 }
