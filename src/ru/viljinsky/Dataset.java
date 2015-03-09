@@ -31,12 +31,15 @@ abstract class AbstractDataset extends ArrayList<Object[]>{
     public abstract Integer insert(Map<String,Object> map) throws Exception;
     public abstract void edit(Map<String,Object> map) throws Exception;
     public abstract boolean delete() throws Exception;
+    
+    public abstract Map<String,Object> getValues();
 }
 
 public class Dataset extends AbstractDataset{
     String tableName ;
     
     Set<String> primary;
+    Set<String> unique;
     Map<Integer,String> columns;
     Map<String,String> lookupMap;
     Map<String,String> foreignMap;
@@ -49,6 +52,7 @@ public class Dataset extends AbstractDataset{
         lookupMap = new HashMap<>();
         primary = new HashSet<>();
         foreignMap = new HashMap<>();
+        unique = new HashSet<>();
     }
 
     public void setIndex(Integer index) {
@@ -204,6 +208,7 @@ public class Dataset extends AbstractDataset{
      * Получить карту значение текущей записи <имя_поля> <значение>
      * @return 
      */
+    @Override
     public Map<String,Object> getValues(){
         Map<String,Object> result = new HashMap<>();
         Object[] rowset = this.get(index);
@@ -236,6 +241,7 @@ public class Dataset extends AbstractDataset{
         this.columns=ds.columns;
         this.primary=ds.primary;
         this.lookupMap=ds.lookupMap;
+        this.unique=ds.unique;
         
         
         this.clear();
@@ -256,20 +262,36 @@ public class Dataset extends AbstractDataset{
     }
     
     //--------------------- E D I T I N G -------------------------------------- 
-    
-    public boolean checkPrimary(Object[] rowset) throws Exception{
+    public void testUnique(Object[] rowset) throws Exception{
+        Map<Integer,Object> keys = new HashMap<>();
+        if (unique.size()==0) return;
+        for (String s:unique){
+            keys.put(getColumnIndex(s), rowset[getColumnIndex(s)]);
+        }
+        for (Object[] r:this){
+            boolean b = false;
+            for (int k:keys.keySet()){
+                b = (!r[k].equals(keys.get(k)));
+                if (b==true)  break;
+                
+            }
+            if (b==false)
+                throw new Exception("Нарушена уникальность записей");
+        }
+
+    }
+    public void testPrimary(Object[] rowset) throws Exception{
+        
         Map<Integer,Object> keys = new HashMap<>();
         for (String s:getPrimary()){
             keys.put(getColumnIndex(s), rowset[getColumnIndex(s)]);
         }
-        for (Object r:this){
-            for (int k:keys.keySet()){
-                if (rowset[k].equals(keys.get(k))){
+        
+        for (Object[] r:this)
+            for (int k:keys.keySet())
+                if (r[k].equals(keys.get(k)))
                     throw new Exception("Нарушение примари_кей");
-                }
-            }
-        }
-        return true;
+                
     }
     
      /**
@@ -278,9 +300,15 @@ public class Dataset extends AbstractDataset{
      
     @Override
     public void edit(Map<String, Object> values) throws Exception{
-        Object[] rowset = this.get(index);
+        Object[] rowset = new Object[getColumnCount()];
         for (int col:columns.keySet()){
             rowset[col]=values.get(columns.get(col));
+        }
+        testPrimary(rowset);
+        testUnique(rowset);
+        Object[] r = this.get(index);
+        for (int i=0;i<r.length;i++){
+            r[i]= rowset[i];
         }
     }
     
@@ -293,6 +321,8 @@ public class Dataset extends AbstractDataset{
         for (String key:values.keySet()){
             rowset[getColumnIndex(key)]=values.get(key);
         }
+        testPrimary(rowset);
+        testUnique(rowset);
         add(index, rowset);
         return index;
     }
@@ -308,6 +338,8 @@ public class Dataset extends AbstractDataset{
         for (String columnName : values.keySet()){
             rowset[getColumnIndex(columnName)]=values.get(columnName);
         }
+        testPrimary(rowset);
+        testUnique(rowset);
         this.add(rowset);
         index = indexOf(rowset);
         return index;

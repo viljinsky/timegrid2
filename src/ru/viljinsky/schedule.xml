@@ -38,12 +38,14 @@
         <primary key="shift_id;lesson_id;day_id"></primary>
         <lookup column="lesson_id" references="lesson.time_begin;lesson.time_end"></lookup>
         <lookup column="day_id" references="day_list.caption"></lookup>    
-        <foreigh key="shift_id" references="shift.id"></foreigh>
+        <foreign key="shift_id" references="shift.id"></foreign>
             
         <rec shift_id="1" lesson_id="1" day_id="1"></rec>
         <rec shift_id="1" lesson_id="2" day_id="1"></rec>
         <rec shift_id="1" lesson_id="3" day_id="1"></rec>
         <rec shift_id="1" lesson_id="4" day_id="1"></rec>
+        
+        <unique columns="shift_id;lesson_id;day_id"></unique>
         
     </table>
     
@@ -184,6 +186,7 @@
         <rec profile_id="2" subject_id="1"></rec>
         <rec profile_id="2" subject_id="2"></rec>
         <foreign key="profile_id" references="profile.id"></foreign>
+        <unique columns="profile_id;subject_id"></unique>
         <lookup column="subject_id" references="subject.name"></lookup>
     </table>
     

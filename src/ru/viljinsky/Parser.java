@@ -77,6 +77,17 @@ public class Parser extends DefaultHandler{
                 System.out.println(dataset.tableName+" "+ dataset.foreignMap.toString());
                 break;
                 
+            case "unique":
+                if (attributes.getValue("columns")==null){
+                    System.err.println(dataset.tableName+" Неверный аттрибут unique");
+                    break;
+                }
+                
+                s=attributes.getValue("columns").split(";");
+                for (String ss:s){
+                    dataset.unique.add(ss);
+                }
+                break;
             default:
                 System.err.println("unknow '"+qName+"'");
         }
