@@ -48,6 +48,22 @@ public class XMLExport {
                 xml.append(String.format("\t\t<lookup column=\"%s\" references =\"%s\"></lookup>\n",s,lookup.get(s)));
             }
         }
+        
+        if (!ds.foreignMap.isEmpty()){
+            for (String k:ds.foreignMap.keySet()){
+                xml.append(String.format("<foreign key=\"%s\" references=\"%s\"></foreign>\n", k,ds.foreignMap.get(k)));
+            }
+        }
+        
+        if (ds.unique.size()>0){
+            String res = "";
+            for (String s:ds.unique){
+                if (!res.isEmpty())
+                    res+=";";
+                res+=s;
+            }
+            xml.append(String.format("<unique columns=\"%s\"></unique>\n", res));
+        }
                 
         while (!ds.eof()) {
             xml.append("\t\t<rec ");

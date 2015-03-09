@@ -9,11 +9,19 @@ package ru.viljinsky.test;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFileChooser;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -199,6 +207,8 @@ class GridPanel extends JPanel{
 public class Main extends JFrame{
     DataModule dataModule = DataModule.getInsatnce();
     JTabbedPane tabbedPane = new JTabbedPane();
+    File file = new File(".");
+
 
     public Main(){
         super("Main");
@@ -207,10 +217,18 @@ public class Main extends JFrame{
         content.add(tabbedPane);
     }
     
-    public void open() {
+    public void open(String fileName) {
         GridPanel panel;
         String tableName;
-        dataModule.open();
+        if (dataModule.isActive()){
+            dataModule.close();
+        }
+        tabbedPane.removeAll();
+        if (fileName==null)
+            dataModule.open();
+        else
+            dataModule.open(fileName);
+        
         for (Dataset dataset:dataModule.getTables()){
             if (dataset.hasReferences()){
                 tableName = dataset.getTableName();
@@ -221,12 +239,73 @@ public class Main extends JFrame{
         }
     }
     
+    class Act extends AbstractAction{
+
+        public Act(String name) {
+            super(name);
+            putValue(Action.ACTION_COMMAND_KEY, name);
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            doCommand(e.getActionCommand());
+        }
+    }
+    
+    
+    protected void doCommand(String command){
+        JFileChooser fc;
+        int retVal;
+        try{
+            switch(command){
+                
+                case "open":
+                     fc = new JFileChooser(file);
+                     retVal = fc.showOpenDialog(rootPane);
+                     if (retVal==JFileChooser.APPROVE_OPTION){
+                         open(fc.getSelectedFile().getPath());
+                         file = fc.getSelectedFile();
+                     }
+                    break;
+                case "save":
+                    fc = new JFileChooser(file);
+                    retVal = fc.showSaveDialog(fc);
+                    if (retVal==JFileChooser.APPROVE_OPTION){
+                        dataModule.save(fc.getSelectedFile().getPath());
+                        file = fc.getSelectedFile();
+                        JOptionPane.showMessageDialog(rootPane, "Файл "+file.getName()+" успешно сохранён");
+                    }
+                    break;
+                case "saveAs":
+                    break;
+            }
+            
+        } catch (Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, e.getMessage());
+        }
+    }
+    
+    public JMenu getFileMenu(){
+        Action[] actions = {new Act("open"),new Act("save"),new Act("saveAs")};
+        JMenu menu = new JMenu("File");
+        for (Action a:actions){
+            menu.add(a);
+        }
+        return menu;
+    }
+    
     public static void main(String[] args){
         Main frame = new Main();
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(frame.getFileMenu());
+        frame.setJMenuBar(menuBar);
+        
         frame.pack();
         frame.setVisible(true);
-        frame.open();
+        frame.open(null);
         
     }
 

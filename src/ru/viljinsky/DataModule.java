@@ -137,7 +137,7 @@ public class DataModule {
         return result.toArray(new String[tables.size()]);
     }
 
-    void close() {
+    public void close() {
         tables.clear();
         active=false;
     }
