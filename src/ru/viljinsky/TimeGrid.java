@@ -207,21 +207,24 @@ public class TimeGrid extends AbstractTimeGrid{
         Chip chip ;
         cells.clear();
         
-        chip = new Chip(1,1,1,1);
+        chip = new Chip();
         chip.setCell(1,1);
-        cells.add(chip);
-        
-        chip = new Chip(2,2,1,1);
-        chip.setCell(2,1);
-        cells.add(chip);
-
-        chip = new Chip(3,3,1,1);
-        chip.setCell(1,4);
-        cells.add(chip);
-
-        chip = new Chip(4,1,1,1);
-        chip.setCell(2,4);
-        cells.add(chip);
+                
+//        chip = new Chip(1,1,1,1);
+//        chip.setCell(1,1);
+//        cells.add(chip);
+//        
+//        chip = new Chip(2,2,1,1);
+//        chip.setCell(2,1);
+//        cells.add(chip);
+//
+//        chip = new Chip(3,3,1,1);
+//        chip.setCell(1,4);
+//        cells.add(chip);
+//
+//        chip = new Chip(4,1,1,1);
+//        chip.setCell(2,4);
+//        cells.add(chip);
         
     }
     

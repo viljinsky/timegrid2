@@ -180,15 +180,4 @@ public class DataModule {
         xmlExport.save(path);
     }
 
-    @Deprecated
-    public Object lookUp(String tableName,String keyName,Object keyValue,String searchColumn) throws Exception{
-        Dataset dataset = getTable(tableName);
-        if (dataset!=null){
-            return dataset.lookUp(keyName, keyValue, searchColumn);
-        } else {
-            new Exception("Dataset '"+tableName+"'not found");
-        }
-        return null;
-    }
-    
 }

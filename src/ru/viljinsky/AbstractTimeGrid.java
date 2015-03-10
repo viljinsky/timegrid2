@@ -23,7 +23,7 @@ import java.util.Set;
  */
 abstract class AbstractTimeGrid extends Container {
     Set<DragObject> dragObjects = null;
-    Cells cells;
+    protected Cells cells;
     int colCount = 10;
     int rowCount = 7;
     Integer[] rowHeights;

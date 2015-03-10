@@ -45,6 +45,8 @@ public class Parser extends DefaultHandler{
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         String[] s;
         switch (qName){
+            case "root": case "columns":
+                break;
             case "table":
                 dataset = new Dataset(attributes.getValue("name"));
                 if (attributes.getValue("primary")!=null){
@@ -88,7 +90,7 @@ public class Parser extends DefaultHandler{
                 
             case "foreign":
                 dataset.foreignMap.put(attributes.getValue("key"), attributes.getValue("references"));
-                System.out.println(dataset.tableName+" "+ dataset.foreignMap.toString());
+//                System.out.println(dataset.tableName+" "+ dataset.foreignMap.toString());
                 break;
                 
             case "unique":

@@ -113,6 +113,12 @@ public class Dataset extends AbstractDataset{
         return null;
     }
     
+    public String getString(String columnName) throws Exception {
+        Object value = getValue(columnName);
+        return value.toString();
+    }
+
+    
     @Deprecated
     public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
         int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
@@ -366,6 +372,13 @@ public class Dataset extends AbstractDataset{
     public boolean isLookup(String columnName){
         return lookupMap.get(columnName)!=null;
     }
+    
+    public Object getLookupValue(String columnName) throws Exception{
+        Map lookup = getLookup(columnName);
+        if (lookup!=null)
+            return lookup.get(getValue(columnName));
+        throw new Exception(String.format("Поле \"%s\" не является лукап полем датасета \"%s\"",columnName,tableName));
+    }
     /**
      * Получене списка ключ-значение  для лукап-поля
      * @param columnName
@@ -375,7 +388,7 @@ public class Dataset extends AbstractDataset{
         String lookup;
         String t1,t2,t3;
         String[] f;
-        DataModule dm = DataModule.getInsatnce();
+//        DataModule dm = DataModule.getInsatnce();
         Dataset ds;
         Map<Object,Object> map = new HashMap<>();
         String[] primary;
@@ -473,6 +486,7 @@ public class Dataset extends AbstractDataset{
     public String toString(){
         return tableName+" ("+size()+")";
     }
+
 
     
 }

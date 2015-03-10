@@ -296,12 +296,34 @@ public class Main extends JFrame{
     }
     
     public static void main(String[] args){
-        Main frame = new Main();
+        final Main frame = new Main();
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(frame.getFileMenu());
         frame.setJMenuBar(menuBar);
+        
+        JMenu menu = new JMenu("Dictionary");
+        menu.add(new AbstractAction("Dict") {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Dict.showDictionary(frame);
+            }
+        });
+        
+        menu.add(new AbstractAction("Schedue") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                Schedule.showSchedule(frame,frame.dataModule.getTable("schedule"));
+                } catch (Exception e1){
+                    e1.printStackTrace();
+                }
+            }
+        });
+        menuBar.add(menu);
         
         frame.pack();
         frame.setVisible(true);
