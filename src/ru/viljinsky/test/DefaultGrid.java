@@ -149,20 +149,29 @@ class DefaultGrid extends JTable implements IDefaultGrid {
         
     }
     
+    class AppendDiaog extends DatasetEntryDialog{
+
+        public AppendDiaog(JComponent owner) {
+            super(owner);
+        }
+
+        @Override
+        public void doEnter() throws Exception {
+            int row = model.dataset.append(getValues());
+            model.fireTableDataChanged();
+            model.dataset.setIndex(row);
+        }
+        
+    }
+    
     @Override
     public void append() {
-        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
+        AppendDiaog dlg = new AppendDiaog(rootPane);
         dlg.setDataset(model.dataset);
         dlg.setVisible(true);
         if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
-            try{
-                model.dataset.append(dlg.getValues());
-                model.fireTableDataChanged();
-                int row = model.dataset.getIndex();
-                getSelectionModel().setSelectionInterval(row, row);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(rootPane,e.getMessage());
-            }
+            int row = model.dataset.getIndex();
+            getSelectionModel().setSelectionInterval(row, row);
         }
     }
 
@@ -178,38 +187,56 @@ class DefaultGrid extends JTable implements IDefaultGrid {
         }
     }
 
+    class EditDialog extends DatasetEntryDialog{
+
+        public EditDialog(JComponent owner) {
+            super(owner);
+        }
+
+        @Override
+        public void doEnter() throws Exception {
+            int row = model.dataset.getIndex();
+            model.dataset.edit(getValues());
+            model.fireTableDataChanged();
+            model.dataset.setIndex(row);
+        }
+    }
+    
     @Override
     public void edit() {
-        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
+        EditDialog dlg = new EditDialog(rootPane);
         dlg.setDataset(model.dataset);
         dlg.setValues(model.dataset.getValues());
         dlg.setVisible(true);
         if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
-            try{
-                model.dataset.edit(dlg.getValues());
-                model.fireTableDataChanged();
-                int row = model.dataset.getIndex();
-                getSelectionModel().setSelectionInterval(row,row);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(rootPane, e.getMessage());
-            }
+            int row = model.dataset.getIndex();
+            getSelectionModel().setSelectionInterval(row,row);
         }
     }
 
+    class InsertDialog extends DatasetEntryDialog{
+
+        public InsertDialog(JComponent owner) {
+            super(owner);
+        }
+
+        @Override
+        public void doEnter() throws Exception {
+            int row = model.dataset.insert(getValues());
+            model.fireTableDataChanged();
+            model.dataset.setIndex(row);
+        }
+        
+    }
+    
     @Override
     public void insert() {
-        DatasetEntryDialog dlg = new DatasetEntryDialog(rootPane);
+        InsertDialog dlg = new InsertDialog(rootPane);
         dlg.setDataset(model.dataset);
         dlg.setVisible(true);
         if (dlg.getModalResult() == DatasetEntryDialog.RESULT_OK) {
-            try{
-                model.dataset.insert(dlg.getValues());
-                model.fireTableDataChanged();
-                int row = model.dataset.getIndex();
-                getSelectionModel().setSelectionInterval(row, row);
-            } catch (Exception e){
-                JOptionPane.showMessageDialog(rootPane, "OK");
-            }
+            int row = model.dataset.getIndex();
+            getSelectionModel().setSelectionInterval(row, row);
         }
         
         

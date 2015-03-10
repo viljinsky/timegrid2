@@ -9,11 +9,13 @@ package ru.viljinsky.test;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.accessibility.AccessibleRole;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -215,9 +217,14 @@ public class Main extends JFrame{
         Container content = getContentPane();
         content.setPreferredSize(new Dimension(800, 600));
         content.add(tabbedPane);
+        int x,y;
+        Dimension d = getToolkit().getScreenSize();
+        pack();
+        setLocation((d.width-getWidth())/2,(d.height-getHeight())/2);
     }
     
     public void open(String fileName) {
+        
         GridPanel panel;
         String tableName;
         if (dataModule.isActive()){

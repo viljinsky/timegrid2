@@ -119,23 +119,23 @@ public class Dataset extends AbstractDataset{
     }
 
     
-    @Deprecated
-    public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
-        int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
-        if (n<0)
-            new Exception("column '"+columnName+"' not found");
-        if (k<0)
-            new Exception("column '"+searchName+"' not found");
-        
-        Integer value;
-        for (Object[] recordset:this){
-            value = Integer.parseInt((String)recordset[n]);
-            if (value.equals(columnValue)){
-                return recordset[k];
-            }
-        }
-        return null;
-    }
+//    @Deprecated
+//    public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
+//        int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
+//        if (n<0)
+//            new Exception("column '"+columnName+"' not found");
+//        if (k<0)
+//            new Exception("column '"+searchName+"' not found");
+//        
+//        Integer value;
+//        for (Object[] recordset:this){
+//            value = Integer.parseInt((String)recordset[n]);
+//            if (value.equals(columnValue)){
+//                return recordset[k];
+//            }
+//        }
+//        return null;
+//    }
 
 
     public int getColumnIndex(String columnName) throws Exception{
@@ -293,11 +293,18 @@ public class Dataset extends AbstractDataset{
             keys.put(getColumnIndex(s), rowset[getColumnIndex(s)]);
         }
         
-        for (Object[] r:this)
-            for (int k:keys.keySet())
-                if (r[k].equals(keys.get(k)))
-                    throw new Exception("Нарушение примари_кей");
-                
+        for (Object[] r:this){
+            boolean b = true;
+            if (index>=0 && r==get(index)){
+                continue;
+            }
+            for (int k:keys.keySet()){
+                b = r[k].equals(keys.get(k));
+                if (!b) break;
+            }
+            if (b)
+                throw new Exception("Нарушение примари_кей");
+        }
     }
     
      /**
@@ -323,13 +330,16 @@ public class Dataset extends AbstractDataset{
         if (index<0){
             throw new Exception(ERR_NO_RECORD_SELECTED);
         }
+        int row = index;
+        index=-1;
         Object[] rowset = new Object[getColumnCount()];
         for (String key:values.keySet()){
             rowset[getColumnIndex(key)]=values.get(key);
         }
         testPrimary(rowset);
         testUnique(rowset);
-        add(index, rowset);
+        add(row, rowset);
+        index = row;
         return index;
     }
     

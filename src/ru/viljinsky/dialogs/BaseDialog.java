@@ -16,6 +16,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -69,8 +70,13 @@ public class BaseDialog extends JDialog {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-                modalResult=RESULT_OK;
-                BaseDialog.this.setVisible(false);
+                try{
+                    doEnter();
+                    modalResult=RESULT_OK;
+                    BaseDialog.this.setVisible(false);
+                } catch (Exception ext){
+                    JOptionPane.showMessageDialog(rootPane, ext.getMessage());
+                }
             }
         });
         buttonPanel.add(btn);
@@ -95,6 +101,10 @@ public class BaseDialog extends JDialog {
     }
     
     public void initComponents(Container content){
+    }
+    
+    
+    public void doEnter() throws Exception{
     }
     
     public int getModalResult(){
