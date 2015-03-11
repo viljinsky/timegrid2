@@ -76,7 +76,7 @@ class DefaultGrid extends JTable implements IDefaultGrid {
             public void keyPressed(KeyEvent e) {
                 switch(e.getKeyCode()) {
                     case KeyEvent.VK_INSERT:
-                        insert();
+                        append();
                         break;
                     case KeyEvent.VK_DELETE:
                         delete();

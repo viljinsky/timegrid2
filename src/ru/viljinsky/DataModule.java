@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 
 /**
@@ -129,8 +130,12 @@ public class DataModule {
      * Список имён корневых датасетов
      * @return 
      */
-    public String[] getTableNames(){
-        Set<String> result = new HashSet<>();
+    public static String ERR_DATAMODULE_NOT_ACTIVE= "ДатаМодуль не открыт";
+    public String[] getTableNames() throws Exception{
+        if (!active){
+            throw new Exception(ERR_DATAMODULE_NOT_ACTIVE);
+        }
+        Set<String> result = new HashSet() {};
         for (Dataset dataset:tables){
             result.add(dataset.tableName);
         }

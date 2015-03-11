@@ -46,6 +46,7 @@ public class Dataset extends AbstractDataset{
 
     protected Integer index=-1;
     
+    
     public Dataset(String tableName){
         this.tableName=tableName;
         columns = new HashMap<>();
@@ -117,26 +118,6 @@ public class Dataset extends AbstractDataset{
         Object value = getValue(columnName);
         return value.toString();
     }
-
-    
-//    @Deprecated
-//    public Object lookUp(String columnName,Object columnValue,String searchName) throws Exception{
-//        int n = getColumnIndex(columnName),k=getColumnIndex(searchName);
-//        if (n<0)
-//            new Exception("column '"+columnName+"' not found");
-//        if (k<0)
-//            new Exception("column '"+searchName+"' not found");
-//        
-//        Integer value;
-//        for (Object[] recordset:this){
-//            value = Integer.parseInt((String)recordset[n]);
-//            if (value.equals(columnValue)){
-//                return recordset[k];
-//            }
-//        }
-//        return null;
-//    }
-
 
     public int getColumnIndex(String columnName) throws Exception{
         for (int n:columns.keySet())
@@ -286,11 +267,27 @@ public class Dataset extends AbstractDataset{
         }
 
     }
+    
+    /**
+     * Проверка уникальности  primary key записи
+     * также элементы primary key должны иметь значение не null
+     * 
+     * @param rowset
+     * @throws Exception 
+     */
     public void testPrimary(Object[] rowset) throws Exception{
         
         Map<Integer,Object> keys = new HashMap<>();
-        for (String s:getPrimary()){
-            keys.put(getColumnIndex(s), rowset[getColumnIndex(s)]);
+        Object value;
+        Integer columnIndex;
+        
+        for (String columnName :getPrimary()){
+            columnIndex= getColumnIndex(columnName);
+            value = rowset[columnIndex];
+            if (value==null){
+                throw new Exception("Поле \""+columnName+"\" - не может быть иметь значение \"null\"");
+            }
+            keys.put(columnIndex, value);
         }
         
         for (Object[] r:this){
@@ -298,8 +295,8 @@ public class Dataset extends AbstractDataset{
             if (index>=0 && r==get(index)){
                 continue;
             }
-            for (int k:keys.keySet()){
-                b = r[k].equals(keys.get(k));
+            for (int col:keys.keySet()){
+                b = r[col].equals(keys.get(col));
                 if (!b) break;
             }
             if (b)
@@ -339,6 +336,9 @@ public class Dataset extends AbstractDataset{
         testPrimary(rowset);
         testUnique(rowset);
         add(row, rowset);
+        // post
+        if (this!=dm.getTable(tableName))
+            dm.getTable(tableName).add(rowset);
         index = row;
         return index;
     }
@@ -357,6 +357,8 @@ public class Dataset extends AbstractDataset{
         testPrimary(rowset);
         testUnique(rowset);
         this.add(rowset);
+        if (this!=dm.getTable(tableName))
+            dm.getTable(tableName).add(rowset);
         index = indexOf(rowset);
         return index;
     }

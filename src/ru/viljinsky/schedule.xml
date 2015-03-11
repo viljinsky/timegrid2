@@ -51,7 +51,7 @@
         
     </table>
     
-    <table name="subject" primary="id">
+    <table name="subject" primary="id" autoincrement = "true">
         <column name="id" type="integer"></column>
         <column name="name" type="string"></column>
         <column name="color" type="integer"></column>
@@ -190,6 +190,7 @@
     </table>
     
     <table name="profile_item">
+        <primary key="profile_id;subject_id"></primary>
         <rec profile_id="1" subject_id="1"></rec>
         <rec profile_id="1" subject_id="2"></rec>
         <rec profile_id="1" subject_id="3"></rec>
