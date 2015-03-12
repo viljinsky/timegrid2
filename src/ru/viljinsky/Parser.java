@@ -12,15 +12,17 @@ package ru.viljinsky;
  */
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
+interface IParserListener{
+    public void addTable(Dataset dataset);
+}
 
 public class Parser extends DefaultHandler{
 
+    IParserListener listener = null;
     
     private Dataset dataset;
     
@@ -36,7 +38,9 @@ public class Parser extends DefaultHandler{
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName){
             case "table":
-                addDataset(dataset);
+                if (listener!=null){
+                    listener.addTable(dataset);
+                }
                 break;
         }
     }
@@ -121,8 +125,6 @@ public class Parser extends DefaultHandler{
         System.out.println("Stop document");
     }
 
-    public void addDataset(Dataset dataset){
-    }
 
     public static void main(String[] args) {
         Parser parser;

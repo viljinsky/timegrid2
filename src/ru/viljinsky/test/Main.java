@@ -9,13 +9,11 @@ package ru.viljinsky.test;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.accessibility.AccessibleRole;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -25,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -35,6 +34,7 @@ import javax.swing.table.AbstractTableModel;
 
 import ru.viljinsky.DataModule;
 import ru.viljinsky.Dataset;
+import ru.viljinsky.TestDS;
 
 /**
  *
@@ -90,7 +90,7 @@ class GridModel extends AbstractTableModel{
 
 class Grid extends DefaultGrid{
     Map<String,String> map = null;
-    
+
     public void setDataset(Dataset dataset){
         model = new GridModel(dataset);
         setModel(model);
@@ -139,8 +139,63 @@ class Grid extends DefaultGrid{
 //--------------------- G R I D   P A N E L ------------------------------------
 class GridPanel extends JPanel{
     JTabbedPane tabbedPane = new JTabbedPane();
-    Grid grid = new Grid();
+    Grid grid = new MasterGrid();
     Grid[] refGrids;
+    
+    
+    class MasterGrid extends Grid{
+        
+        Action[] masterAction ;
+
+        class Act extends AbstractAction{
+
+            public Act(String name) {
+                super(name);
+                putValue(Action.ACTION_COMMAND_KEY, name);
+            }
+
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                doCommand(e.getActionCommand());
+            }
+        }
+        
+        @Override
+        public void doCommand(String command){
+            try{
+                switch (command){
+                    case "fillShift":
+                        if (model.dataset.getTableName().equals("shift")){
+                            TestDS.fillShift(model.dataset.getValue("id"));
+                            model.fireTableDataChanged();
+                        }
+                        break;
+                    case "fill1":case "fill2":case "fill3":
+                        System.out.println("-->"+command+" ok "+ model.dataset.getTableName());
+                        break;
+                    default:    
+                    super.doCommand(command);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null,e.getMessage());
+            }
+        }
+        
+        @Override
+        public void createPopup(JPopupMenu popup) {
+            super.createPopup(popup);
+            popup.addSeparator();
+            
+            masterAction = new Action[]{new Act("fillShift"),new Act("fill2"),new Act("fill3")};
+            
+            for (Action a:masterAction){
+                popup.add(a);
+            }
+        }
+        
+    }
     
     public GridPanel(){
         setLayout(new BorderLayout());
@@ -285,6 +340,9 @@ public class Main extends JFrame{
                     break;
                 case "saveAs":
                     break;
+                case "exit":
+                    System.exit(0);
+                    break;
             }
             
         } catch (Exception e){
@@ -294,10 +352,13 @@ public class Main extends JFrame{
     }
     
     public JMenu getFileMenu(){
-        Action[] actions = {new Act("open"),new Act("save"),new Act("saveAs")};
+        Action[] actions = {new Act("open"),new Act("save"),new Act("saveAs"),null,new Act("exit")};
         JMenu menu = new JMenu("File");
         for (Action a:actions){
-            menu.add(a);
+            if (a==null)
+                menu.addSeparator();
+            else
+                menu.add(a);
         }
         return menu;
     }

@@ -93,6 +93,13 @@ class DefaultGrid extends JTable implements IDefaultGrid {
         });
         
         addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount()==2){
+                edit();}
+            }
+            
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mousePressed(e);
@@ -108,9 +115,7 @@ class DefaultGrid extends JTable implements IDefaultGrid {
             public void showPupup(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     JPopupMenu popup = new JPopupMenu();
-                    for (Action a : actions) {
-                        popup.add(a);
-                    }
+                    createPopup(popup);
                     int x = e.getX();
                     int y = e.getY();
                     popup.show(DefaultGrid.this, x, y);
@@ -119,6 +124,13 @@ class DefaultGrid extends JTable implements IDefaultGrid {
         });
     }
 
+    
+    public void createPopup(JPopupMenu popup){
+        for (Action a : actions) {
+            popup.add(a);
+        }
+    }
+    
     protected void doCommand(String command) {
         try {
             switch (command) {

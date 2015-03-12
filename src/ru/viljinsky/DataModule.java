@@ -147,17 +147,8 @@ public class DataModule {
         active=false;
     }
     
-    class DataParser extends Parser{
-
-        @Override
-        public void addDataset(Dataset dataset) {
-            tables.add(dataset);
-        }
-        
-    }
-    
     public void open(){
-        URL url = DataModule.class.getResource("schedule.xml");
+        URL url = DataModule.class.getResource("schedule2.xml");
         if (url!=null){
             open(url.getPath());
         }
@@ -166,7 +157,14 @@ public class DataModule {
     public void open(String path){
         tables = new ArrayList<>();
         try{
-            Parser parser = new DataParser();
+            Parser parser = new Parser();
+            parser.listener = new IParserListener() {
+
+                @Override
+                public void addTable(Dataset dataset) {
+                    tables.add(dataset);
+                }
+            };
             parser.open(path);
             active = true;
         } catch (Exception e){

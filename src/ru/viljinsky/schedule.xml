@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
+    <!-- 
     
+    Перый этап Список предметов, Расписание звонков, Рабочии дни,Графики по умолчанию
+    
+    -->
     <table name="day_list">
         <columns>
             <column name="id" type="integer"></column>
@@ -31,9 +35,11 @@
     
     <table name="shift">
         <primary key="id"></primary>
-        <rec id="1" caption="График перподавателя"></rec>
-        <rec id="2" caption="График помещения"></rec>
-        <rec id="3" caption="График класса"></rec>
+        <rec id="1" parent="" caption="График перподавателя"></rec>
+        <rec id="4" parent="1" caption="Стандартный график перподавателя"></rec>
+        <rec id="5" parent="1" caption="График перподавателя 2"></rec>
+        <rec id="2" parent="" caption="График помещения"></rec>
+        <rec id="3" parent="" caption="График класса"></rec>
     </table>
     
     <table name="shift_item">
@@ -47,42 +53,13 @@
         <rec shift_id="1" lesson_id="3" day_id="1"></rec>
         <rec shift_id="1" lesson_id="4" day_id="1"></rec>
         
-        <unique columns="shift_id;lesson_id;day_id"></unique>
-        
+        <unique columns="shift_id;lesson_id;day_id"></unique>        
     </table>
-    
-    <table name="subject" primary="id" autoincrement = "true">
-        <column name="id" type="integer"></column>
-        <column name="name" type="string"></column>
-        <column name="color" type="integer"></column>
-        <rec id="1" name="Русский яз"   color="0xFF00FF"></rec>
-        <rec id="2" name="Математика"   color="0xFF00FF"></rec>
-        <rec id="3" name="Физика"       color="0xFFFFFF"></rec>
-        <rec id="4" name="Химия"        color="0xFF00FF"></rec>
-        <rec id="5" name="Литература"   color="0xFFFFBB"></rec>        
-    </table>
-    
-    
-    
-    <table name="teacher">
-        <primary key="id"></primary>
-        <lookup column="shift_id" references="shift.caption"></lookup>    
-        <rec id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна" shift_id="1" profile_id="1"></rec>
-        <rec id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна" shift_id="1" profile_id="1"></rec>
-        <rec id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна" shift_id="1" profile_id="1"></rec>
-        <rec id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна" shift_id="1" profile_id="1"></rec>        
-        <lookup column="profile_id" references="profile.name"></lookup>
-    </table>
-    
-    <table name="room">
-        <primary key="id"></primary>
-        <lookup column="shift_id" references="shift.caption"></lookup>
-        <rec id="1" number="312" description="" shift_id="2" profile_id="2"></rec>
-        <rec id="2" number="314" description="" shift_id="2" profile_id="2"></rec>
-        <rec id="3" number="510" description="" shift_id="2" profile_id="2"></rec>
-        <rec id="4" number="515" description="" shift_id="2" profile_id="2"></rec>
-        <lookup column="profile_id" references="profile.name"></lookup>
-    </table>
+
+    <!--      
+        Второй этап :
+        Предметы,Учебный план
+    -->    
     
     <table name="skill">
         <primary key="id"></primary>
@@ -92,6 +69,41 @@
         <rec id="4" caption="11-класс"></rec>
     </table>
     
+    <table name="subject" primary="id" autoincrement = "true">
+        <column name="id" type="integer"></column>
+        <column name="name" type="string"></column>
+        <column name="color" type="integer"></column>
+        <rec id="1" name="Русский яз"   color="0xFF00FF"></rec>
+        <rec id="2" name="Литература"   color="0xFF00FF"></rec>
+        
+        <rec id="3" name="Алгебра"   color="0xFF00FF"></rec>
+        <rec id="4" name="Геометрия"       color="0xFFFFFF"></rec>
+        
+        <rec id="5" name="Иностранный яз"        color="0xFF00FF"></rec>
+        <rec id="6" name="Физкультура"   color="0xFFFFBB"></rec>        
+    </table>
+    
+    <table name="curriculum" primary="id">
+        <rec id="1" description="Учебный план 1"></rec>
+    </table>
+    
+    <table name="curriculum_item" primary="curriculum_id;subject_id">
+        <rec curriculum_id="1" subject_id="1" group_type_id="1" hour_per_week="2" hour_per_day="1" ></rec>
+        <foreign key="curriculum_id" references="curriculum.id"></foreign>
+        <lookup column="subject_id" references="subject.name"></lookup>
+        <lookup column="group_type_id" references="group_type.description">
+            
+        </lookup>
+    </table>
+
+    <!--
+             3-ий этап:
+             
+             Классы
+             Преподаватели
+             Помещения
+             
+    -->    
     
     <table name="depart">
         <columns>
@@ -118,6 +130,35 @@
         <lookup column="shift_id" references="shift.caption"></lookup>
     </table>
     
+    
+    <table name="teacher">
+        <primary key="id"></primary>
+        <lookup column="shift_id" references="shift.caption"></lookup>    
+        <rec id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна" shift_id="1" profile_id="1" room_id=""></rec>
+        <rec id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна" shift_id="1" profile_id="1" room_id=""></rec>
+        <rec id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна" shift_id="1" profile_id="1" room_id=""></rec>
+        <rec id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна" shift_id="1" profile_id="1" room_id=""></rec>        
+        <lookup column="profile_id" references="profile.name"></lookup>
+        <lookup column="room_id" references="room.number"></lookup>
+    </table>
+    
+    <table name="room">
+        <primary key="id"></primary>
+        <lookup column="shift_id" references="shift.caption"></lookup>
+        <rec id="1" number="312" description="" shift_id="2" profile_id="2"></rec>
+        <rec id="2" number="314" description="" shift_id="2" profile_id="2"></rec>
+        <rec id="3" number="510" description="" shift_id="2" profile_id="2"></rec>
+        <rec id="4" number="515" description="" shift_id="2" profile_id="2"></rec>
+        <lookup column="profile_id" references="profile.name"></lookup>
+    </table>
+    
+    
+    <!--  
+        4-ый этап  РАБОЧИЙ ПЛАН
+        в соответсвии с учебным планом создать учебных группы классов
+        приязать к ним преподователей и помещения
+    -->
+    
     <table name="group_type" primary="id">
         <rec id="0" caption=""  description="Весь класс"></rec>
         <rec id="1" caption="М/Д" description="Мальчики/Девочки"></rec>
@@ -133,18 +174,6 @@
         <lookup column="subject_id" references="subject.name"></lookup>
     </table>
     
-    <table name="curriculum" primary="id">
-        <rec id="1" description="Учебный план 1"></rec>
-    </table>
-    
-    <table name="curriculum_item" primary="curriculum_id;subject_id">
-        <rec curriculum_id="1" subject_id="1" group_type_id="1" hour_per_week="2" hour_per_day="1" ></rec>
-        <foreign key="curriculum_id" references="curriculum.id"></foreign>
-        <lookup column="subject_id" references="subject.name"></lookup>
-        <lookup column="group_type_id" references="group_type.description">
-            
-        </lookup>
-    </table>
     
     <table name="work_plan">
         <rec group_id="1" subject_id="1" teacher_id="1" room_id="1" hour_per_week="2"></rec>
@@ -159,6 +188,10 @@
         <foreign key="group_id" references="subject_group.id"></foreign>
         <foreign key="teacher_id" references="teacher.id"></foreign>
     </table>
+    
+    <!--  
+            5-ый этам Составление расписания
+    -->
     
     <table name="schedule">
         <rec day_id="1" lesson_id="1" group_id="1" subject_id="1" teacher_id="1" room_id="1"></rec>
@@ -185,17 +218,25 @@
     
     <table name="profile">
         <primary key="id"></primary>
-        <rec id="1" name="Профиль преподавателя"></rec>
-        <rec id="2" name="Профиль помещения"></rec>
+        <rec id="1" parent="" name="Профиль преподавателя"></rec>
+        <rec id="3" parent="1" name="Преподаватель русского языка и литературы"></rec>
+        <rec id="4" parent="1" name="Преподаватель алгебра и геометрия"></rec>
+        <rec id="2" parent="" name="Профиль помещения"></rec>
+        <rec id="5" parent="2" name="Аудитория"></rec>
     </table>
     
     <table name="profile_item">
         <primary key="profile_id;subject_id"></primary>
-        <rec profile_id="1" subject_id="1"></rec>
-        <rec profile_id="1" subject_id="2"></rec>
-        <rec profile_id="1" subject_id="3"></rec>
-        <rec profile_id="2" subject_id="1"></rec>
-        <rec profile_id="2" subject_id="2"></rec>
+        <rec profile_id="3" subject_id="1"></rec>
+        <rec profile_id="3" subject_id="2"></rec>
+        <rec profile_id="4" subject_id="3"></rec>
+        <rec profile_id="4" subject_id="4"></rec>
+        
+        <rec profile_id="5" subject_id="1"></rec>
+        <rec profile_id="5" subject_id="2"></rec>
+        <rec profile_id="5" subject_id="3"></rec>
+        <rec profile_id="5" subject_id="4"></rec>
+        
         <foreign key="profile_id" references="profile.id"></foreign>
         <unique columns="profile_id;subject_id"></unique>
         <lookup column="subject_id" references="subject.name"></lookup>

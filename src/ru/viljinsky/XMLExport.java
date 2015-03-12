@@ -51,7 +51,7 @@ public class XMLExport {
         
         if (!ds.foreignMap.isEmpty()){
             for (String k:ds.foreignMap.keySet()){
-                xml.append(String.format("<foreign key=\"%s\" references=\"%s\"></foreign>\n", k,ds.foreignMap.get(k)));
+                xml.append(String.format("\t\t<foreign key=\"%s\" references=\"%s\"></foreign>\n", k,ds.foreignMap.get(k)));
             }
         }
         
@@ -62,7 +62,7 @@ public class XMLExport {
                     res+=";";
                 res+=s;
             }
-            xml.append(String.format("<unique columns=\"%s\"></unique>\n", res));
+            xml.append(String.format("\t\t<unique columns=\"%s\"></unique>\n", res));
         }
                 
         while (!ds.eof()) {

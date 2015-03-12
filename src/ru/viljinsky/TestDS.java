@@ -38,6 +38,26 @@ public class TestDS {
         
     }
     
+    public static void fillShift(Object shift_id) throws Exception{
+        Dataset shift_item = dm.getTable("shift_item");
+        Dataset lessons = dm.getTable("lesson");
+        Dataset day_list = dm.getTable("day_list");
+        Map<String,Object> values = new HashMap<>();
+        lessons.first();
+        while (!lessons.eof()){
+            
+            day_list.first();
+            while (!day_list.eof()){
+                values.put("shift_id",shift_id);
+                values.put("day_id",day_list.getValue("id"));
+                values.put("lesson_id",lessons.getValue("id"));
+                shift_item.append(values);
+                day_list.next();
+            }
+            lessons.next();
+        }
+    }
+    
     public static void fillShift() throws Exception{
         Dataset shift = dm.getTable("shift");
         Dataset shift_item = dm.getTable("shift_item");
@@ -53,14 +73,10 @@ public class TestDS {
             
             day_list.first();
             while (!day_list.eof()){
-//                lessons.first();
-//                while (!lessons.eof()){
-                    values.put("shift_id",shift.getValue("id"));
-                    values.put("day_id",day_list.getValue("id"));
-                    values.put("lesson_id",lessons.getValue("id"));
-                    shift_item.append(values);
-//                    lessons.next();
-//                }
+                values.put("shift_id",shift.getValue("id"));
+                values.put("day_id",day_list.getValue("id"));
+                values.put("lesson_id",lessons.getValue("id"));
+                shift_item.append(values);
                 day_list.next();
             }
             lessons.next();
