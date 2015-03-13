@@ -22,6 +22,12 @@ import java.util.SortedSet;
  */
 public class DataModule {
     
+    public static String ERR_DATAMODULE_NOT_ACTIVE= "ДатаМодуль не открыт";
+    public static String ERR_TABLE_NOT_FOUND = "Таблица \"%s\" не найдена";
+    public static String ERR_FILR_EXISTS ="Файл \"%s\" уже существует";
+    
+    String dataName = "schedule.xml";
+    
     boolean active = false;
     List<Dataset> tables = null;
     
@@ -47,14 +53,14 @@ public class DataModule {
      */
     public Dataset getTable(String tableName) throws Exception{
         if (!active)
-            throw new Exception ("ERROR! DataModule not active") ;
+            throw new Exception (ERR_DATAMODULE_NOT_ACTIVE) ;
         
         for (Dataset dataset:tables)
             if (dataset.getTableName().equals(tableName)){
                 return dataset;
             }
         
-        throw new Exception(String.format("Таблица \"%s\" не найдена",tableName));
+        throw new Exception(String.format(ERR_TABLE_NOT_FOUND,tableName));
     }
     /**
      * Получение отцильтрованной таблицы по имени_таблицы
@@ -82,27 +88,27 @@ public class DataModule {
         }
         return result;
     }
-    /**
-     * Получение списка подчинённых таблиц для таблицы с именем_тfблицы
-     * @param tableName
-     * @return сисок табли Dataset[]
-     */
-    public Dataset[] getRefTables(String tableName){
-//        Set<Dataset> list = new HashSet<>();
-        java.util.List<Dataset> list = new ArrayList<>();
-        Dataset refDataset;
-        for (Dataset ds : tables){
-            if (ds.isReferences(tableName)){
-                refDataset = new Dataset(ds.tableName);
-                refDataset.columns=ds.columns;
-                refDataset.primary=ds.primary;
-                refDataset.lookupMap=ds.lookupMap;
-                refDataset.foreignMap=ds.foreignMap;
-                list.add(refDataset);
-            }
-        }
-        return list.toArray(new Dataset[list.size()]);
-    }
+    
+//    /**
+//     * Получение списка подчинённых таблиц для таблицы с именем_тfблицы
+//     * @param tableName
+//     * @return сисок табли Dataset[]
+//     */
+//    public Dataset[] getRefTables(String tableName){
+//        List<Dataset> list = new ArrayList<>();
+//        Dataset refDataset;
+//        for (Dataset ds : tables){
+//            if (ds.isReferences(tableName)){
+//                refDataset = new Dataset(ds.tableName);
+//                refDataset.columns=ds.columns;
+//                refDataset.primary=ds.primary;
+//                refDataset.lookupMap=ds.lookupMap;
+//                refDataset.foreignMap=ds.foreignMap;
+//                list.add(refDataset);
+//            }
+//        }
+//        return list.toArray(new Dataset[list.size()]);
+//    }
     
     public Dataset getTable(Integer index){
         if (index>=0)
@@ -130,7 +136,6 @@ public class DataModule {
      * Список имён корневых датасетов
      * @return 
      */
-    public static String ERR_DATAMODULE_NOT_ACTIVE= "ДатаМодуль не открыт";
     public String[] getTableNames() throws Exception{
         if (!active){
             throw new Exception(ERR_DATAMODULE_NOT_ACTIVE);
@@ -148,7 +153,7 @@ public class DataModule {
     }
     
     public void open(){
-        URL url = DataModule.class.getResource("schedule2.xml");
+        URL url = DataModule.class.getResource("schedule.xml");
         if (url!=null){
             open(url.getPath());
         }
@@ -166,6 +171,7 @@ public class DataModule {
                 }
             };
             parser.open(path);
+            dataName=path;
             active = true;
         } catch (Exception e){
             e.printStackTrace();
@@ -175,12 +181,16 @@ public class DataModule {
     public void save(String path) throws Exception{
         File file = new File(path);
         if (file.exists()){
-            throw new Exception("Файл \""+path+"\"существует");
+            throw new Exception(String.format(ERR_FILR_EXISTS, path));
         }
         
         XMLExport xmlExport = new XMLExport();
         xmlExport.execute();
         xmlExport.save(path);
+    }
+
+    public String getDataName() {
+        return dataName;
     }
 
 }

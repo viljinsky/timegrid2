@@ -24,6 +24,7 @@ public class XMLExport {
     private void saveTable(String tableName) throws Exception {
         Dataset ds = dm.getTable(tableName);
         ds.first();
+        xml.append(String.format("\n\t<!--                  %s                        -->\n\n", tableName.toUpperCase()));
         xml.append(String.format("\t<table name=\"%s\">\n", tableName));
         
         for (String s : ds.getColumns()) {
@@ -64,7 +65,8 @@ public class XMLExport {
             }
             xml.append(String.format("\t\t<unique columns=\"%s\"></unique>\n", res));
         }
-                
+        
+        xml.append("\n\t\t<!--          data                   -->\n");
         while (!ds.eof()) {
             xml.append("\t\t<rec ");
             for (String columnName : ds.getColumns()) {
@@ -80,7 +82,6 @@ public class XMLExport {
     public void execute() throws Exception{
         xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n");
-//        dm.open();
             for (String tableName : dm.getTableNames()) {
                 saveTable(tableName);
             }

@@ -46,6 +46,10 @@ public class Dataset extends AbstractDataset{
 
     protected Integer index=-1;
     
+    public Map getForeignMap(){
+        return foreignMap;
+    }
+    
     
     public Dataset(String tableName){
         this.tableName=tableName;
@@ -474,6 +478,20 @@ public class Dataset extends AbstractDataset{
         return null;
     }
     
+    public Dataset[] getForeignDataset() throws Exception{
+        List<Dataset> list = new ArrayList<>();
+//        System.out.println("##"+tableName);
+        for (Dataset dataset:dm.tables){
+//            System.out.println("####"+dataset.tableName+" "+dataset.foreignMap);
+            
+            if (dataset.isReferences(tableName))
+                list.add(dataset);
+        }
+//        System.out.println();
+        return list.toArray(new Dataset[list.size()]);
+    }
+    
+    
     /**
      * Получение списка подчинённых таблиц
      * @return 
@@ -497,6 +515,23 @@ public class Dataset extends AbstractDataset{
     @Override
     public String toString(){
         return tableName+" ("+size()+")";
+    }
+
+    public void print() {
+        
+        for (int i=0;i<getColumnCount();i++){
+            System.out.print(getColumnName(i)+" ");
+        }
+        System.out.println();
+        
+        Object[] rowset;
+        for (int i=0;i<size();i++){
+            rowset = get(i);
+            for (int j=0;j<rowset.length;j++){
+                System.out.print((rowset[j]==null?"null":rowset[j].toString())+" ");
+            }
+            System.out.println();
+        }
     }
 
 

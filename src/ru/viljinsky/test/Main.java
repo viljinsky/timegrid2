@@ -331,6 +331,7 @@ public class Main extends JFrame{
                     break;
                 case "save":
                     fc = new JFileChooser(file);
+                    fc.setSelectedFile(new File("test.xml"));
                     retVal = fc.showSaveDialog(fc);
                     if (retVal==JFileChooser.APPROVE_OPTION){
                         dataModule.save(fc.getSelectedFile().getPath());
@@ -389,6 +390,14 @@ public class Main extends JFrame{
                 } catch (Exception e1){
                     e1.printStackTrace();
                 }
+            }
+        });
+        
+        menu.add(new AbstractAction("Model") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ErrModel.showModel();
             }
         });
         menuBar.add(menu);

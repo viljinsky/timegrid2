@@ -30,6 +30,8 @@
         <rec id="5" time_begin="13:00" time_end="13:45"></rec>
         <rec id="6" time_begin="14:00" time_end="14:45"></rec>
         <rec id="7" time_begin="15:00" time_end="15:45"></rec>
+        <rec id="8" time_begin="16:00" time_end="16:45"></rec>
+        <rec id="9" time_begin="17:00" time_end="17:45"></rec>
         <unique columns="id"></unique>
     </table>
     
@@ -53,7 +55,9 @@
         <rec shift_id="1" lesson_id="3" day_id="1"></rec>
         <rec shift_id="1" lesson_id="4" day_id="1"></rec>
         
-        <unique columns="shift_id;lesson_id;day_id"></unique>        
+        <unique columns="shift_id;lesson_id;day_id"></unique> 
+        <foreign key="lesson_id" references="lesson.id" ></foreign>       
+        <foreign key="day_id" references="day_list.id" ></foreign>       
     </table>
 
     <!--      
@@ -73,14 +77,15 @@
         <column name="id" type="integer"></column>
         <column name="name" type="string"></column>
         <column name="color" type="integer"></column>
-        <rec id="1" name="Русский яз"   color="0xFF00FF"></rec>
-        <rec id="2" name="Литература"   color="0xFF00FF"></rec>
         
-        <rec id="3" name="Алгебра"   color="0xFF00FF"></rec>
-        <rec id="4" name="Геометрия"       color="0xFFFFFF"></rec>
+        <rec id="1" name="Русский яз"     color="0xFF00FF"></rec>
+        <rec id="2" name="Литература"     color="0xFF00FF"></rec>
         
-        <rec id="5" name="Иностранный яз"        color="0xFF00FF"></rec>
-        <rec id="6" name="Физкультура"   color="0xFFFFBB"></rec>        
+        <rec id="3" name="Алгебра"        color="0xFF00FF"></rec>
+        <rec id="4" name="Геометрия"      color="0xFFFFFF"></rec>
+        
+        <rec id="5" name="Иностранный яз" color="0xFF00FF"></rec>
+        <rec id="6" name="Физкультура"    color="0xFFFFBB"></rec>        
     </table>
     
     <table name="curriculum" primary="id">
@@ -88,12 +93,10 @@
     </table>
     
     <table name="curriculum_item" primary="curriculum_id;subject_id">
-        <rec curriculum_id="1" subject_id="1" group_type_id="1" hour_per_week="2" hour_per_day="1" ></rec>
         <foreign key="curriculum_id" references="curriculum.id"></foreign>
         <lookup column="subject_id" references="subject.name"></lookup>
-        <lookup column="group_type_id" references="group_type.description">
-            
-        </lookup>
+        <lookup column="group_type_id" references="group_type.description"></lookup>
+        <rec curriculum_id="1" subject_id="1" group_type_id="1" hour_per_week="2" hour_per_day="1" ></rec>
     </table>
 
     <!--
@@ -106,15 +109,21 @@
     -->    
     
     <table name="depart">
-        <columns>
-            <column name="id" type="integer"></column>
-            <column name="skill_id"></column>
-            <column name="label" type="integer"></column>
-            <column name="shift_id" type="integer"></column>
-            <column name="curriculumn_id" type="integer"></column>
-        </columns>
+        <column name="id" type="integer"></column>
+        <column name="skill_id"></column>
+        <column name="label" type="integer"></column>
+        <column name="shift_id" type="integer"></column>
+        <column name="curriculum_id" type="integer"></column>
+        
         <primary key="id"></primary>
+        <foreign key="skill_id" references="skill.id"></foreign>
+        <foreign key="curriculum_id" references="curriculum.id"></foreign>
+        
+        <lookup column="skill_id" references="skill.caption"></lookup>
+        <lookup column="curriculum_id" references="curriculum.description"></lookup>
+        <lookup column="shift_id" references="shift.caption"></lookup>        
         <lookup column="shift_id" references="shift.caption"></lookup>
+        
         <rec id="1" skill_id="1" label="А" curriculum_id="1" shift_id="3"></rec>
         <rec id="2" skill_id="1" label="Б" curriculum_id="1" shift_id="3"></rec>
         <rec id="3" skill_id="1" label="В" curriculum_id="1" shift_id="3"></rec>
@@ -122,34 +131,33 @@
         <rec id="5" skill_id="2" label="Б" curriculum_id="1" shift_id="3"></rec>
         <rec id="6" skill_id="3" label="А" curriculum_id="1" shift_id="3"></rec>
         <rec id="7" skill_id="3" label="Б" curriculum_id="1" shift_id="3"></rec>
-        <primary key="id"></primary>
-        <foreign key="skill_id" references="skill.id"></foreign>
-        
-        <lookup column="skill_id" references="skill.caption"></lookup>
-        <lookup column="curriculum_id" references="curriculum.description"></lookup>
-        <lookup column="shift_id" references="shift.caption"></lookup>
+
     </table>
     
     
     <table name="teacher">
         <primary key="id"></primary>
+        
         <lookup column="shift_id" references="shift.caption"></lookup>    
+        <lookup column="profile_id" references="profile.name"></lookup>
+        <lookup column="room_id" references="room.number"></lookup>
+        
         <rec id="1" first_name="Иванова" last_name="Ирина" patronymic="Романовна" shift_id="1" profile_id="1" room_id=""></rec>
         <rec id="2" first_name="Петрова" last_name="Галина" patronymic="Сидоровна" shift_id="1" profile_id="1" room_id=""></rec>
         <rec id="3" first_name="Сидорова" last_name="Светлана" patronymic="Николаевна" shift_id="1" profile_id="1" room_id=""></rec>
         <rec id="4" first_name="Сорокина" last_name="Татьяна" patronymic="Игоревна" shift_id="1" profile_id="1" room_id=""></rec>        
-        <lookup column="profile_id" references="profile.name"></lookup>
-        <lookup column="room_id" references="room.number"></lookup>
     </table>
     
     <table name="room">
         <primary key="id"></primary>
+        
         <lookup column="shift_id" references="shift.caption"></lookup>
+        <lookup column="profile_id" references="profile.name"></lookup>
+        
         <rec id="1" number="312" description="" shift_id="2" profile_id="2"></rec>
         <rec id="2" number="314" description="" shift_id="2" profile_id="2"></rec>
         <rec id="3" number="510" description="" shift_id="2" profile_id="2"></rec>
         <rec id="4" number="515" description="" shift_id="2" profile_id="2"></rec>
-        <lookup column="profile_id" references="profile.name"></lookup>
     </table>
     
     
@@ -172,6 +180,8 @@
         <rec id="4" depart_id="4" subject_id="4" group_type_id="2"></rec>
         <lookup column="group_type_id" references="group_type.caption"></lookup>
         <lookup column="subject_id" references="subject.name"></lookup>
+        
+        <foreign key="depart_id" references="depart.id"></foreign>
     </table>
     
     
