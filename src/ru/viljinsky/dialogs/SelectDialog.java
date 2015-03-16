@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,7 +24,9 @@ import javax.swing.border.EmptyBorder;
  */
 public class SelectDialog extends BaseDialog {
 
-    public SelectDialog() {
+    public SelectDialog(JComponent owner) {
+        super(owner);
+        setSize(new Dimension(500,400));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class SelectDialog extends BaseDialog {
     
 
     public static void main(String[] args){
-        SelectDialog dlg = new SelectDialog();
+        SelectDialog dlg = new SelectDialog(null);
 //        dlg.setDefaultCloseOperation(EXIT_ON_CLOSE);
         dlg.setVisible(true);
         System.out.println("OK");

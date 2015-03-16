@@ -146,6 +146,68 @@ public class SQL {
         return ds;
     }
     
+    /**
+     * strFilter columName operation value
+     * operation !=, =,>,<,
+     * @param strTables
+     * @param strFilter
+     * @return
+     * @throws Exception 
+     */
+    enum SQLOperator {
+        EQUAL,
+        NOT_EQUAL,
+        GRETTER,
+        GR_EQUAL,
+        LESS,
+        LESS_EQAL,
+        EXISTS,
+        NOT_EXISTS,
+        IS_NULL
+    }
+    public Dataset selectFilter(String strTables,String strFilter) throws Exception{
+        SQLOperator op = SQLOperator.IS_NULL;
+        Dataset result = select(strTables);
+        Dataset ds = new Dataset("v1");
+        for (String column:result.getColumns()){
+            ds.addColumn(column);
+        }
+        
+        Object[] rowset;
+        boolean isOK;
+        
+        for (int i=0;i<result.size();i++){
+            rowset = result.get(i);
+            isOK = false;
+            switch (op){
+                case EQUAL:
+                    break;
+                case NOT_EQUAL:
+                    break;
+                case GRETTER:;
+                    break;
+                case GR_EQUAL:
+                    break;
+                case LESS:
+                    break;
+                case LESS_EQAL:
+                    break;
+                case EXISTS:
+                    break;
+                case IS_NULL:
+                    isOK = !((String)rowset[1]).isEmpty();
+                    break;
+                default:
+                    isOK=false;
+                        
+            }
+            if (isOK)
+            ds.add(rowset);
+        }
+        
+        return ds;
+    }
+    
     
     /**
      *  insert into subject select * from subject
