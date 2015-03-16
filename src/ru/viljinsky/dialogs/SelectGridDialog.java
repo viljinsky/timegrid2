@@ -12,8 +12,8 @@ import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import ru.viljinsky.DataModule;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *

@@ -6,6 +6,7 @@
 
 package ru.viljinsky.test;
 
+import ru.viljinsky.dbcontrols.DBLookup;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -20,8 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import ru.viljinsky.Chip;
-import ru.viljinsky.DataModule;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 import ru.viljinsky.TimeGrid;
 
 /**
@@ -98,7 +99,7 @@ public class Schedule extends JFrame{
         }
         
         public void onFilterChanged(DBLookup lookup){
-                System.out.println("Filter-->"+lookup.dataset.getTableName()+" " +lookup.getValue());
+                System.out.println("Filter-->"+lookup.getDataset().getTableName()+" " +lookup.getValue());
         }
     }
     

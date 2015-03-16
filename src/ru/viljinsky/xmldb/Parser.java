@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky;
+package ru.viljinsky.xmldb;
 
 /**
  *
  * @author вадик
  */
 
+import ru.viljinsky.xmldb.Dataset;
 import java.net.URL;
 import javax.xml.parsers.*;
 import org.xml.sax.*;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky;
+package ru.viljinsky.xmldb;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class Dataset extends AbstractDataset{
     Map<String,String> lookupMap;
     Map<String,String> foreignMap;
 
-    protected Integer index=-1;
+    public Integer index=-1;
     
     public Map getForeignMap(){
         return foreignMap;
@@ -439,7 +439,7 @@ public class Dataset extends AbstractDataset{
     //--------------------- R E F E R E N C E S --------------------------------
 
     public boolean hasReferences(){
-        for (Dataset dataset:dm.tables)
+        for (Dataset dataset:dm.getTables())
             if (dataset.isReferences(tableName))
                 return true;
         return false;
@@ -481,7 +481,7 @@ public class Dataset extends AbstractDataset{
     public Dataset[] getForeignDataset() throws Exception{
         List<Dataset> list = new ArrayList<>();
 //        System.out.println("##"+tableName);
-        for (Dataset dataset:dm.tables){
+        for (Dataset dataset:dm.getTables()){
 //            System.out.println("####"+dataset.tableName+" "+dataset.foreignMap);
             
             if (dataset.isReferences(tableName))

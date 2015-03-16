@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky;
+package ru.viljinsky.xmldb;
 
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

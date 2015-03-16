@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *

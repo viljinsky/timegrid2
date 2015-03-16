@@ -4,14 +4,14 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky.test;
+package ru.viljinsky.dbcontrols;
 
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.event.ListDataListener;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *
@@ -21,6 +21,10 @@ public class DBLookup extends JComboBox {
     Map<Object, Object> map = new HashMap<>();
     Object selected = null;
     Dataset dataset;
+    
+    public Dataset getDataset(){
+        return dataset;
+    }
 
     class DBLookupModel implements ComboBoxModel {
 

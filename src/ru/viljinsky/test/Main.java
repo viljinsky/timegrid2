@@ -6,14 +6,11 @@
 
 package ru.viljinsky.test;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -22,20 +19,12 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import ru.viljinsky.dbcontrols.GridPanel;
 
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 
-import ru.viljinsky.DataModule;
-import ru.viljinsky.Dataset;
-import ru.viljinsky.TestDS;
-import ru.viljinsky.dialogs.SelectGridDialog;
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *
@@ -44,234 +33,12 @@ import ru.viljinsky.dialogs.SelectGridDialog;
 
 
 //----------------------- G R I D   M O D E L ----------------------------------
-class GridModel extends AbstractTableModel{
-    Dataset dataset;
-    Map<Integer,Map<Object,Object>> lookup = new HashMap<>();
-    
-    public GridModel(Dataset dataset) {
-        this.dataset = dataset;
-        try{
-            for (String column:dataset.getColumns()){
-                if (dataset.isLookup(column)){
-                    lookup.put(dataset.getColumnIndex(column), dataset.getLookup(column));
-                }
-            }
-        } catch (Exception e){
-            System.err.println("Ошибка в конструкторе GridModel :\n"+e.getMessage());
-        }
-    }
-
-    @Override
-    public int getRowCount() {
-        return dataset.getRowCount();
-    }
-
-    @Override
-    public String getColumnName(int column) {
-        return dataset.getColumnName(column);
-    }
-
-    @Override
-    public int getColumnCount() {
-        return dataset.getColumnCount();
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        Object[] rowset  = dataset.getRowset(rowIndex);
-        if (lookup.containsKey(columnIndex)){
-            Map lu = lookup.get(columnIndex);
-            return lu.get(rowset[columnIndex]);
-        }
-        return rowset[columnIndex];
-    }
-}
 
 //------------------------  G R I D - ------------------------------------------
 
-class Grid extends DefaultGrid{
-    Map<String,String> map = null;
-
-    public void setDataset(Dataset dataset){
-        model = new GridModel(dataset);
-        setModel(model);
-    }
-    
-    public Dataset getDataset(){
-        if (model!=null)
-            return model.dataset;
-        return null;
-    }
-    
-    public void open(){
-        if (model!=null)
-            try{
-                model.dataset.open();
-                model.fireTableDataChanged();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }   
-    
-    public void open(Map<String,Object> keys){
-        if (map!=null)
-            System.out.println("map->"+map);
-        System.out.println("keys->"+keys);
-        Map<Integer,Object> filter = new HashMap<>();
-        if (model!=null) {
-            try{
-                Dataset dataset = model.dataset;
-                for (String s:map.keySet()){
-                    filter.put(dataset.getColumnIndex(s), keys.get(map.get(s)));
-                }
-                System.out.println("filter->"+filter);
-                
-                model.dataset.open(filter);
-                model.fireTableDataChanged();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }   
-        
-    }
-}
 
 
 //--------------------- G R I D   P A N E L ------------------------------------
-class GridPanel extends JPanel{
-    JTabbedPane tabbedPane = new JTabbedPane();
-    Grid grid = new MasterGrid();
-    Grid[] refGrids;
-    
-    
-    class MasterGrid extends Grid{
-        
-        Action[] masterAction ;
-
-        class Act extends AbstractAction{
-
-            public Act(String name) {
-                super(name);
-                putValue(Action.ACTION_COMMAND_KEY, name);
-            }
-
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doCommand(e.getActionCommand());
-            }
-        }
-        
-        @Override
-        public void doCommand(String command){
-            try{
-                switch (command){
-                    case "fillShift":
-                        if (model.dataset.getTableName().equals("shift")){
-                            TestDS.fillShift(model.dataset.getValue("id"));
-                            model.fireTableDataChanged();
-                        }
-                        break;
-                    case "fill1":case "fill2":case "fill3":
-                        System.out.println("-->"+command+" ok "+ model.dataset.getTableName());
-                        break;
-                    case "FillSubject":
-                        SelectGridDialog dlg = new SelectGridDialog(GridPanel.this);
-                        dlg.setTableName("subject");
-                        dlg.pack();
-                        dlg.setVisible(true);
-                        
-                        break;
-                    default:    
-                        super.doCommand(command);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null,e.getMessage());
-            }
-        }
-        
-        @Override
-        public void createPopup(JPopupMenu popup) {
-            super.createPopup(popup);
-            popup.addSeparator();
-            
-            masterAction = new Action[]{new Act("fillShift"),
-                new Act("fill2"),
-                new Act("fill3"),
-                new Act("FillSubject")
-            };
-            
-            for (Action a:masterAction){
-                popup.add(a);
-            }
-        }
-        
-    }
-    
-    public GridPanel(){
-        setLayout(new BorderLayout());
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setTopComponent(new JScrollPane(grid));
-        splitPane.setBottomComponent(tabbedPane);
-        splitPane.setResizeWeight(0.5);
-        add(splitPane);
-        grid.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()){
-                    onRecordChange();
-                }
-            }
-        });
-        
-    }
-    
-    public void onRecordChange(){
-        int row = grid.getSelectedRow();
-        if (row>=0){
-            Dataset dataset = grid.getDataset();
-            dataset.setIndex(row);
-            Map<String,Object> keys= new HashMap<>();
-            try{
-                for (String s:dataset.getPrimary()){
-                    keys.put(s, dataset.getValue(s));
-                }
-                System.out.println(keys);
-                for (Grid g:refGrids){
-                    g.open(keys);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-    
-    public void setDataset(Dataset dataset){
-        tabbedPane.removeAll();
-        grid.setDataset(dataset);
-        Dataset[] refDatasets = dataset.getRefTables();
-        Dataset ds;
-        refGrids = new Grid[refDatasets.length];
-        for (int i =0 ; i<refGrids.length;i++){
-            ds = refDatasets[i];
-            refGrids[i]= new Grid();
-            refGrids[i].setDataset(ds);
-            tabbedPane.addTab(ds.getTableName(),new JScrollPane(refGrids[i]));
-            try{
-                String refs = ds.getReferences(dataset.getTableName());
-                Map<String,String> map = new HashMap<>();
-                map.put(refs.split("=")[0], refs.split("=")[1]);
-                refGrids[i].map = map;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            
-        }
-    }
-    
-}
 //----------------------------   T E S T 1 -------------------------------------
 public class Main extends JFrame{
     DataModule dataModule = DataModule.getInsatnce();

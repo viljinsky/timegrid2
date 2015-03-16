@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky.test;
+package ru.viljinsky.dbcontrols;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -19,6 +19,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import ru.viljinsky.dbcontrols.GridModel;
 import ru.viljinsky.dialogs.DatasetEntryDialog;
 
 /**

@@ -16,8 +16,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import ru.viljinsky.DataModule;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.dbcontrols.Grid;
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *

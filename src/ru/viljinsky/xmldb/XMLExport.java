@@ -1,6 +1,8 @@
-package ru.viljinsky;
+package ru.viljinsky.xmldb;
 
 
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Map;

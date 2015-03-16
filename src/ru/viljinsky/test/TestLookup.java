@@ -6,8 +6,8 @@
 
 package ru.viljinsky.test;
 
-import ru.viljinsky.DataModule;
-import ru.viljinsky.Dataset;
+import ru.viljinsky.xmldb.DataModule;
+import ru.viljinsky.xmldb.Dataset;
 
 /**
  *

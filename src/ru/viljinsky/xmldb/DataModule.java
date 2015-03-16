@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky;
+package ru.viljinsky.xmldb;
 
+import ru.viljinsky.xmldb.Dataset;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
