@@ -35,6 +35,7 @@ import javax.swing.table.AbstractTableModel;
 import ru.viljinsky.DataModule;
 import ru.viljinsky.Dataset;
 import ru.viljinsky.TestDS;
+import ru.viljinsky.dialogs.SelectGridDialog;
 
 /**
  *
@@ -174,8 +175,15 @@ class GridPanel extends JPanel{
                     case "fill1":case "fill2":case "fill3":
                         System.out.println("-->"+command+" ok "+ model.dataset.getTableName());
                         break;
+                    case "FillSubject":
+                        SelectGridDialog dlg = new SelectGridDialog(GridPanel.this);
+                        dlg.setTableName("subject");
+                        dlg.pack();
+                        dlg.setVisible(true);
+                        
+                        break;
                     default:    
-                    super.doCommand(command);
+                        super.doCommand(command);
                 }
             } catch (Exception e){
                 e.printStackTrace();
@@ -188,7 +196,11 @@ class GridPanel extends JPanel{
             super.createPopup(popup);
             popup.addSeparator();
             
-            masterAction = new Action[]{new Act("fillShift"),new Act("fill2"),new Act("fill3")};
+            masterAction = new Action[]{new Act("fillShift"),
+                new Act("fill2"),
+                new Act("fill3"),
+                new Act("FillSubject")
+            };
             
             for (Action a:masterAction){
                 popup.add(a);
