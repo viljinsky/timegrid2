@@ -20,10 +20,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import ru.viljinsky.Chip;
+import ru.viljinsky.timegrid.Chip;
 import ru.viljinsky.xmldb.DataModule;
 import ru.viljinsky.xmldb.Dataset;
-import ru.viljinsky.TimeGrid;
+import ru.viljinsky.timegrid.TimeGrid;
 
 /**
  *

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ru.viljinsky;
+package ru.viljinsky.timegrid;
 
 import java.awt.Color;
 import java.awt.Container;

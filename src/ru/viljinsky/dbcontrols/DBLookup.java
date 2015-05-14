@@ -6,6 +6,7 @@
 
 package ru.viljinsky.dbcontrols;
 
+import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ComboBoxModel;
@@ -65,7 +66,7 @@ public class DBLookup extends JComboBox {
     public DBLookup(){
     }
     
-    public DBLookup(Dataset dataset, String ColumnName, String[] values) {
+    public void setDataset(Dataset dataset,String ColumnName,String[] values){
         this.dataset = dataset;
         String strValue;
         dataset.first();
@@ -85,10 +86,20 @@ public class DBLookup extends JComboBox {
             e.printStackTrace();
         }
         setModel(new DBLookupModel());
+        
+    }
+    
+    public DBLookup(Dataset dataset, String ColumnName, String[] values) {
+        setPreferredSize(new Dimension(180,22));
+        setDataset(dataset, ColumnName, values);
     }
 
     public Object getValue() {
         return selected;
+    }
+    
+    public void setValue(Object value){
+        this.selected=value;
     }
     
 }
